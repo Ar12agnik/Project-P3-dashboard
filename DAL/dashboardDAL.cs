@@ -221,6 +221,47 @@ namespace dashboard.DAL
 
             }
         }
+        public Dictionary<int,string> getalllocations()
+        {
+            Dictionary<int, string> locations = new Dictionary<int, string>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_GetAllLocations",con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    string location = Convert.ToString(rdr["StockLocation"]);
+                    int Id = Convert.ToInt32(rdr["PKLocationId"]);
+                    locations[Id] = location;
+                }
+                rdr.Close();
+            }
+            return locations;
+        }
+        public Dictionary<string,int> get_stock_acc_to_location(string lids)
+        {
+            Dictionary< string,int> locations = new Dictionary<string, int>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_getStockSummary", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Lid", lids);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    int stock = Convert.ToInt32(rdr["stk"]);
+                    locations["total"] = stock;
+                }
+                rdr.Close();
+            }
+            return locations;
+        }
+        
+        
 
+        
     }
 }

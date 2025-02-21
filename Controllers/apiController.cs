@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using dashboard.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace dashboard.Controllers
 {
@@ -47,6 +48,18 @@ namespace dashboard.Controllers
         {
             dashboard.DAL.dashboardDAL dd = new dashboard.DAL.dashboardDAL();
             return Json(dd.getuserpermissions(user));
+        }
+        [HttpGet("locations")]
+        public JsonResult getlocations()
+        {
+            dashboard.DAL.dashboardDAL dd = new dashboard.DAL.dashboardDAL();
+            return Json(dd.getalllocations());
+        }
+        [HttpPost("stock")]
+        public JsonResult get_stock_detail(StockDetailRequest request)
+        {
+            dashboard.DAL.dashboardDAL dd = new dashboard.DAL.dashboardDAL();
+            return Json(dd.get_stock_acc_to_location(request.lids));
         }
     }
 }
