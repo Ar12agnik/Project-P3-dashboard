@@ -215,7 +215,9 @@ $(document).ready(function () {
             data: values,
             backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
             hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+            
             hoverBorderColor: "rgba(234, 236, 244, 1)"
+            
           }]
         },
         options: {
@@ -242,7 +244,8 @@ $(document).ready(function () {
             display: true,
             text: 'Vendor Location in %'
           },
-          cutoutPercentage: 0
+          cutoutPercentage: 0,
+          
         }
       });
     });
@@ -340,6 +343,7 @@ $(document).ready(function () {
   // *Set Modal
   $card.on("click",function(){
     // console.log("triggered!!!!!!");
+    $("#select_hidden").attr("hidden",true)
     $("#sales_month_modal,#sales_month_modal_label,#two_inputs").attr("hidden",true);
     $("#modal-body").html(" ")
    
@@ -720,12 +724,118 @@ $.get(url,function(data){
   
     }
   });
+  function setcookie(data){
 
-
-
+    data = data.split(",");
+    str=`tasks = ${data} ;`
+    document.cookie = str
+    }
+    function getcookie(name) {
+      let cookies = document.cookie.split("; ");
+      for (let cookie of cookies) {
+          let [key, value] = cookie.split("=");
+          if (key === name) {
+              return decodeURIComponent(value);
+          }
+      }
+      return null;
+  }
+    function delete_cookie(cname){
+        document.cookie=`${cname}=;  max-age=-10`
+    
+    }
+    function addTask(task) {
+      if (getcookie("tasks")!==null){
+      str=getcookie("tasks")}
+    else{
+    str=''}
+    if(str.indexOf(task)!==-1)
+      console.log("cokies not added");
+    else{
+    
+    str+=`,${task}`
+    setcookie(str)}
+    if(task!==''){
       
+      const todoList = document.getElementById("todo-list");
+      const li = document.createElement("li");
+      li.className = "list-group-item d-flex justify-content-between align-items-center";
+      li.innerHTML = `
+  <span class="task-text ui-icon ui-icon-arrowthick-2-n-s ">${task}</span>
+  <input type="text" class="form-control edit-input" style="display: none;" value="${task}">
+  <div class="btn-group">
+    <button class="btn btn-danger btn-sm delete-btn" value=${task}>&#x2715;</button>
+    <button class="btn btn-primary btn-sm edit-btn"value=${task} hidden>&#9998;</button>
+  </div>
+`;
+      todoList.appendChild(li);}
+  }
+
+  // Event listener for form submission
+  document.getElementById("todo-form").addEventListener("submit",
+      function (event) {
+          event.preventDefault();
+          const taskInput = document.getElementById("todo-input");
+          const task = taskInput.value.trim();
+          if (task !== "") {
+              addTask(task);
+              taskInput.value = "";
+          }
+      });
+
+  // Event listener for delete button click
+  document.getElementById("todo-list").addEventListener("click",
+      function (event) {
+          if (event.target.classList.contains("delete-btn")) {
+            temp=event.target.value
+            str=getcookie("tasks")
+            str=str.replace(`${temp},`,"").trim();
+            str=str.replace(`${temp}`,"").trim();
+            if (getcookie(temp)!==','){
+            setcookie(str)
+          }
+          else{
+            delete_cookie()
+          }
+
+              event.target.parentElement.parentElement.remove();
+          }
+      });
+
+  // Event listener for edit button click
+  document.getElementById("todo-list").addEventListener("click", function (event) {
+      if (event.target.classList.contains("edit-btn")) {
+          const taskText = event.target.parentElement
+              .parentElement.querySelector(".task-text");
+          const editInput = event.target.parentElement
+              .parentElement.querySelector(".edit-input");
+          if (taskText.style.display !== "none") {
+              taskText.style.display = "none";
+              editInput.style.display = "block";
+              editInput.focus();
+              event.target.innerHTML = "&#10004;";
+          } else {
+              taskText.textContent = editInput.value;
+              taskText.style.display = "inline";
+              editInput.style.display = "none";
+              event.target.innerHTML = "&#9998;";
+          }
+      }
+  });
+if (getcookie("tasks")!==null){
+  // Add default tasks
+  const defaultTasks = getcookie("tasks").split(",");
+  defaultTasks.forEach(task => addTask(task));
+}
+
+
+    
       
-   
+
+
+
+
+
 user=1
 
   // *Remove elements for non-admin users and show cards
