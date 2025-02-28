@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Numerics;
+using System.Text.Json.Nodes;
 using dashboard.Models;
 using Microsoft.Data.SqlClient;
 namespace dashboard.DAL
@@ -259,9 +260,190 @@ namespace dashboard.DAL
             }
             return locations;
         }
-        
-        
+        public JsonArray get_stock_table(string lids)
+        {
+            JsonArray json = new JsonArray();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_getStockSummary_tbl", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Lid", lids);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    stocksummary_tbl sst = new stocksummary_tbl();
+                    sst.Product = Convert.ToString(rdr["Product"]);
+                    sst.Category = Convert.ToString(rdr["Category"]);
+                    sst.Batch = Convert.ToString(rdr["Batch"]);
+                    sst.StockLocation = Convert.ToString(rdr["StockLocation"]);
+                    sst.total_stock = Convert.ToInt32(rdr["totalStock"]);
+                    sst.cost = Convert.ToDecimal(rdr["cost"]);
+                    json.Add(sst);
+                }
+                rdr.Close();
+            }
+            return json;
+        } 
+        public JsonArray get_stock_table()
+        {
+            JsonArray json = new JsonArray();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_getStockSummary_tbl", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                //cmd.Parameters.AddWithValue("@Lid", lids);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    stocksummary_tbl sst = new stocksummary_tbl();
+                    sst.Product = Convert.ToString(rdr["Product"]);
+                    sst.Category = Convert.ToString(rdr["Category"]);
+                    sst.Batch = Convert.ToString(rdr["Batch"]);
+                    sst.StockLocation = Convert.ToString(rdr["StockLocation"]);
+                    sst.total_stock = Convert.ToInt32(rdr["totalStock"]);
+                    sst.cost = Convert.ToDecimal(rdr["cost"]);
+                    json.Add(sst);
+                }
+                rdr.Close();
+            }
+            return json;
+        }
+        public Dictionary<string, int> getallstocks()
+        {
+            Dictionary<string, int> locations = new Dictionary<string, int>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_getStockSummary", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                //cmd.Parameters.AddWithValue("@Lid", lids);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    int stock = Convert.ToInt32(rdr["stk"]);
+                    locations["total"] = stock;
+                }
+                rdr.Close();
+            }
+            return locations;
+        }
+        public Dictionary<string, int> gettop10acctostk()
+        {
+            Dictionary<string, int> locations = new Dictionary<string, int>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_getTop10ProdsAccToStock", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                //cmd.Parameters.AddWithValue("@Lid", lids);
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    string Product = Convert.ToString(rdr["Product"]);
+                    int stock = Convert.ToInt32(rdr["totalStock"]);
+                    locations[Product] = stock;
+                }
+                rdr.Close();
+            }
+            return locations;
+        }
+        public JsonArray gettop10acctoexp()
+        {
+            JsonArray json = new JsonArray();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_getTop10ProdsAccexpiry", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Top10exp stk = new Top10exp();
+                    stk.Expiry = Convert.ToInt32(rdr["expiry"]);
+                    stk.Product = Convert.ToString(rdr["Product"]);
+                    stk.totalStock = Convert.ToDecimal(rdr["totalStock"]);
+                    
+                    stk.StockLocation = Convert.ToString(rdr["StockLocation"]);
+                    
+                    stk.Category = Convert.ToString(rdr["Category"]);
+                    json.Add(stk);
 
-        
+                }
+                con.Close();
+                return json;
+            }
+        }
+        public JsonArray getlowqty_prods()
+        {
+            JsonArray json = new JsonArray();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_low_quantity_stock", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    low_qty_stk stk = new low_qty_stk();
+                    stk.prod_id = Convert.ToInt32(rdr["FKProdID"]);
+                    stk.prod_name = Convert.ToString(rdr["Product"]);
+                    stk.total_stk = Convert.ToInt32(rdr["total_stock"]);
+                    stk.reorder_lvl = Convert.ToInt32(rdr["Reorder_level"]);
+                    stk.diff = Convert.ToInt32(rdr["Diff"]);
+                    stk.percentage = Convert.ToDecimal(rdr["perce"]);
+                    json.Add(stk);
+                }
+                con.Close();
+                return json;
+            }
+        }
+        public Dictionary<string, int> get_vendor_district()
+        {
+            Dictionary<string, int> locations = new Dictionary<string, int>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_get_top10_vendoe_district", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                int gt = 0;
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    
+                    int count = Convert.ToInt32(rdr["Percentage"]);
+                    gt += count;
+                    locations[Convert.ToString( rdr["District"])] = count;
+                }
+                rdr.Close();
+                locations["others"] = 100 - gt;
+            }
+            return locations;
+        }public Dictionary<string, int> get_vendor_district(int id)
+        {
+            Dictionary<string, int> locations = new Dictionary<string, int>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_get_top10_vendoe_district", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@catgid", id);
+                int gt = 0;
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    
+                    int count = Convert.ToInt32(rdr["Percentage"]);
+                    gt += count;
+                    locations[Convert.ToString( rdr["District"])] = count;
+                }
+                rdr.Close();
+                locations["others"] = 100 - gt;
+            }
+            return locations;
+        }
+
+
     }
 }
