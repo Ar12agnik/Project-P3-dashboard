@@ -1,17 +1,6 @@
 
 $(document).ready(function () {
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-  function displaymsg(type,message){
-    let alert_var=$("#alert_div")
-    // console.log($("#alert_div").classList);
-    
-    alert_var.addClass(`alert-${type}`)
-    alert_var.html(`${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`)
-    alert_var.removeAttr("hidden")
-  }
+  
   
 
   // *Cache jQuery selectors
@@ -455,7 +444,7 @@ add_table(url,table,str)
 
    })
   $("#exampleModalScrollable").on("hiden.bs.modal",function(){
-
+    debugger;
     // console.log("triggered!!!!!!");
     $("#sales_month_modal,#sales_month_modal_label,#two_inputs").attr("hidden",true);
     $("#modal-body").html(" ")
@@ -754,8 +743,6 @@ $.get(url,function(data){
   
     }
   });
-  // cookiees 
-  
   function setcookie(data){
 
     data = data.split(",");
@@ -776,8 +763,6 @@ $.get(url,function(data){
         document.cookie=`${cname}=;  max-age=-10`
     
     }
-    // cookies part end 
-    // to-do list starts 
     function addTask(task) {
       if (getcookie("tasks")!==null){
       str=getcookie("tasks")}
@@ -798,8 +783,8 @@ $.get(url,function(data){
   <span class="task-text ui-icon ui-icon-arrowthick-2-n-s ">${task}</span>
   <input type="text" class="form-control edit-input" style="display: none;" value="${task}">
   <div class="btn-group">
-    <button class="btn btn-success btn-sm delete-btn" value="${task}">Mark as Done</button>
-    
+    <button class="btn btn-danger btn-sm delete-btn" value="${task}">&#x2715;</button>
+    <button class="btn btn-primary btn-sm edit-btn"value=${task} hidden>&#9998;</button>
   </div>
 `;
       todoList.appendChild(li);}
@@ -840,8 +825,21 @@ $.get(url,function(data){
   // Event listener for edit button click
   document.getElementById("todo-list").addEventListener("click", function (event) {
       if (event.target.classList.contains("edit-btn")) {
-       event.target.parentElement.parentElement.parentElement.classList.add("list-group-item-success")
-       displaymsg("success","Hooray you have Completed a task!!")
+          const taskText = event.target.parentElement
+              .parentElement.querySelector(".task-text");
+          const editInput = event.target.parentElement
+              .parentElement.querySelector(".edit-input");
+          if (taskText.style.display !== "none") {
+              taskText.style.display = "none";
+              editInput.style.display = "block";
+              editInput.focus();
+              event.target.innerHTML = "&#10004;";
+          } else {
+              taskText.textContent = editInput.value;
+              taskText.style.display = "inline";
+              editInput.style.display = "none";
+              event.target.innerHTML = "&#9998;";
+          }
       }
   });
 if (getcookie("tasks")!==null){
@@ -849,8 +847,15 @@ if (getcookie("tasks")!==null){
   const defaultTasks = getcookie("tasks").split(",");
   defaultTasks.forEach(task => addTask(task));
 }
-// to-do list ends 
-// user specific div
+
+
+    
+      
+
+
+
+
+
 user=1
 
   // *Remove elements for non-admin users and show cards
@@ -884,10 +889,18 @@ $("#content").html(`<div class="alert alert-danger" role="alert">
   }
     
   });
-// top 10 peoducts 
   var ctx = document.getElementById("stk_available");
 $.get("https://localhost:44371/api/top10stk" ,function(data){
   keys=Object.keys(data)
+  // values = Object.values(data)
+  bootstrapColors = [
+    "bg-primary",
+    "bg-secondary",
+    "bg-success",
+    "bg-danger",
+    "bg-warning",
+    "bg-info"
+  ];
   value=0
   str=''
   keys.forEach(key => {
@@ -896,15 +909,11 @@ $.get("https://localhost:44371/api/top10stk" ,function(data){
             class="float-right text-grey">${data[key]}%</span></h4>
     <div class="progress mb-4">
         <div class="progress-bar" role="progressbar" style="width: ${data[key]+30}%; background-color:#91ee91;"
-            aria-valuenow="${data[key]}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-placement="left" title="${key}: ${data[key]}%" ></div>
+            aria-valuenow="${data[key]}" aria-valuemin="0" aria-valuemax="100"></div>
     </div>`
   value+=1});
 
   ctx.innerHTML=str
-  setTimeout(() => {
-    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-}, 500);// Delay ensures elements are fully loaded before initialization
 
 })
 
