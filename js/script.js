@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -641,7 +640,7 @@ $.get(url,function(data){
     $("#ct2").append(`<table class="table  table-sm" id="expiring_tbl">
   <thead>
     <tr class="table-success text-grey" >
-    <th scope="col">Expiry</th>
+    <th scope="col">Expiry    (in days)</th>
       <th scope="col">Product</th>
       <th scope="col">Total Stock</th>
       
