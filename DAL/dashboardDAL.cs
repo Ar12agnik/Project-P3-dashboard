@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Data;
+using System.Numerics;
 using System.Text.Json.Nodes;
 using dashboard.Models;
 using Microsoft.Data.SqlClient;
@@ -420,7 +421,8 @@ namespace dashboard.DAL
                 locations["others"] = 100 - gt;
             }
             return locations;
-        }public Dictionary<string, int> get_vendor_district(int id)
+        }
+        public Dictionary<string, int> get_vendor_district(int id)
         {
             Dictionary<string, int> locations = new Dictionary<string, int>();
             using (SqlConnection con = new SqlConnection(constring))
@@ -442,6 +444,79 @@ namespace dashboard.DAL
                 locations["others"] = 100 - gt;
             }
             return locations;
+        }
+        public Dictionary<string, decimal> get_salesdata_graph()
+        {
+            Dictionary<string, decimal> locations = new Dictionary<string, decimal>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_get_last_6_months_sales_data", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                //cmd.Parameters.AddWithValue("@catgid", id);
+
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    locations[Convert.ToString(rdr["month_name"])] = Convert.ToDecimal(rdr["Billed_Amount"]);
+                }
+                rdr.Close();
+
+            }
+            return locations;
+        }
+        public JsonArray ExecuteQuery(string sp_name, string params_)
+        {
+            JsonArray output = new JsonArray();
+            List<SqlParameter> sqlParams = ParseParameters(params_);
+
+            using (SqlConnection conn = new SqlConnection(constring))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sp_name, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    if (sqlParams.Count > 0)
+                    {
+                        cmd.Parameters.AddRange(sqlParams.ToArray());
+                    }
+
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            JsonObject row = new JsonObject();
+                            for (int i = 0; i < rdr.FieldCount; i++)
+                            {
+                                row[rdr.GetName(i)] = rdr.IsDBNull(i) ? null : JsonValue.Create(rdr.GetValue(i));
+                            }
+                            output.Add(row);
+                        }
+                    }
+                }
+            }
+            return output;
+        }
+
+        private List<SqlParameter> ParseParameters(string paramString)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            if (!string.IsNullOrEmpty(paramString))
+            {
+                string[] pairs = paramString.Split(';');
+                foreach (string pair in pairs)
+                {
+                    string[] keyValue = pair.Split('=');
+                    if (keyValue.Length == 2)
+                    {
+                        string paramName = keyValue[0].Trim();
+                        string paramValue = keyValue[1].Trim();
+                        parameters.Add(new SqlParameter($"@{paramName}", paramValue));
+                    }
+                }
+            }
+            return parameters;
         }
 
 

@@ -1,8 +1,13 @@
 ﻿using dashboard.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+
 
 namespace dashboard.Controllers
 {
+    //[EnableCors("AllowFrontend")]
+
     [ApiController]
     [Route("[controller]")]
     public class apiController : Controller
@@ -102,6 +107,28 @@ namespace dashboard.Controllers
             dashboard.DAL.dashboardDAL dd = new dashboard.DAL.dashboardDAL();
             return Json(dd.get_vendor_district(id));
         }
+        [HttpGet("salesdatagraph")]
+        public JsonResult get_salesdata_graph()
+        {
+            dashboard.DAL.dashboardDAL dd = new dashboard.DAL.dashboardDAL();
+            return Json(dd.get_salesdata_graph());
+        }
+        [HttpGet("execproc")]
+        public IActionResult GetResult(string spName, string parameters)
+        {
+            dashboard.DAL.dashboardDAL dd = new dashboard.DAL.dashboardDAL();
+            var result = dd.ExecuteQuery(spName, parameters);
+            return Ok(result); // Returns JSON automatically
+        }
+        [HttpOptions]
+        public IActionResult PreflightCheck()
+        {
+            Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:5500"); // Change to match frontend
+            Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type, Authorization");
+            return Ok();
+        }
+
 
     }
 }
