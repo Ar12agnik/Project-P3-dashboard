@@ -1,6 +1,16 @@
-
 $(document).ready(function () {
-  
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  function displaymsg(type,message){
+    let alert_var=$("#alert_div")
+    // console.log($("#alert_div").classList);
+    
+    alert_var.addClass(`alert-${type}`)
+    alert_var.html(`${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`)
+    alert_var.removeAttr("hidden")
+  }
   
 
   // *Cache jQuery selectors
@@ -17,22 +27,68 @@ $(document).ready(function () {
         $card = $(".card"),
         $exampleModalScrollableTitle=$("#exampleModalScrollableTitle");
         
-
+const base_url="http://localhost:5135/api"
 
   // *Chart Section starts
-  async function getData() {
-    try {
-      const data = await $.get("js/testdata.json");
-      const data1 = data[0],
-            data2 = data[1],
-            keys = Object.keys(data1),
-            values = Object.values(data1);
-      generateChart(keys, values);
-      setCardData(data2);
-    } catch (error) {
-      console.error("Error fetching testdata.json:", error);
-    }
+  function getData() {
+    $.ajax({
+        url: `${base_url}/salesdatagraph`,
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        success: function (data) {
+            const data2 = { "tva": 100 },
+                  keys = Object.keys(data),
+                  values = Object.values(data);
+                  console.log("*****************************************************************************");
+                  console.log(keys)
+
+            generateChart(keys, values);
+            setCardData(data2);
+        },
+        error: function (errormessage) {
+            try {
+                let jsonResponse = JSON.parse(errormessage.responseText);
+                console.log(jsonResponse.Message);
+                
+            } catch (e) {
+                console.error("Error fetching sales data:", errormessage);
+               // toastr.error("An error occurred while fetching sales data.");
+            }
+        }
+    });
   }
+
+  
+
+  //const base_url = "http://localhost:5135/api";
+
+// async function getData() {
+//   try {
+//     const response = await fetch(`${base_url}/salesdatagraph`, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json"
+//       },
+//       mode: "cors" // Ensures that cross-origin requests are allowed
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! Status: ${response.status}`);
+//     }
+
+//     const data = await response.json();
+
+//     const data2 = { "tva": 100 },
+//           keys = Object.keys(data),
+//           values = Object.values(data);
+
+//     generateChart(keys, values);
+//     setCardData(data2);
+//   } catch (error) {
+//     console.error("Error fetching sales data:", error);
+//   }
+// }
 
   Chart.defaults.global.defaultFontFamily =
     'Nunito, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
@@ -107,7 +163,7 @@ $(document).ready(function () {
               callback: (value) => '₹' + number_format(value)
             },
             gridLines: {
-              color: "rgb(234, 236, 244)",
+              color: "#FFFFFF",
               zeroLineColor: "rgb(234, 236, 244)",
               drawBorder: false,
               borderDash: [2],
@@ -145,33 +201,37 @@ $(document).ready(function () {
   // Fetch data for the chart
   var myPieChart = null;  // Initialize globally to null
 
-  $.get('https://localhost:44371/api/Vendor_chart?id=200000001', function(data) {
+  $.get(`${base_url}/Vendor_chart?id=200000001`, function(data) {
     var ctx = document.getElementById("myPieChart").getContext('2d');
     var labels = Object.keys(data);
     var values = Object.values(data);
   
     // Create the initial doughnut chart
     myPieChart = new Chart(ctx, {
-      type: 'doughnut',
+      type: 'pie',
       data: {
         labels: labels,
         datasets: [{
           data: values,
           backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
           hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-          hoverBorderColor: "rgba(234, 236, 244, 1)"
+          hoverBorderColor: "rgba(234, 236, 244, 1)",
+          
         }]
       },
       options: {
         maintainAspectRatio: false,
+        
         tooltips: {
           backgroundColor: "rgb(255,255,255)",
           bodyFontColor: "#858796",
           borderColor: '#dddfeb',
           borderWidth: 1,
+          
+
           xPadding: 15,
           yPadding: 15,
-          displayColors: false,
+          displayColors: true,
           caretPadding: 10
         },
         legend: {
@@ -179,12 +239,15 @@ $(document).ready(function () {
           position: 'right',
           labels: {
             boxWidth: 20,
-            fontColor: '#333'
+            // fontColor: '#FFFFFF'
+
           }
         },
         title: {
           display: true,
-          text: 'Vendor Location in %'
+          text: 'Vendor Location in %',
+          fontColor:'#FFFFFF'
+
         },
         cutoutPercentage: 0
       }
@@ -195,7 +258,7 @@ $(document).ready(function () {
     var id = $("#cht").val();
     console.log(id);
     
-    $.get(`https://localhost:44371/api/Vendor_chart?id=${id}`, function(data) {
+    $.get(`${base_url}/Vendor_chart?id=${id}`, function(data) {
       var labels = Object.keys(data);
       var values = Object.values(data);
   
@@ -229,7 +292,7 @@ $(document).ready(function () {
             borderWidth: 1,
             xPadding: 15,
             yPadding: 15,
-            displayColors: false,
+            displayColors: true,
             caretPadding: 10
           },
           legend: {
@@ -237,12 +300,12 @@ $(document).ready(function () {
             position: 'right',
             labels: {
               boxWidth: 20,
-              fontColor: '#333'
             }
           },
           title: {
             display: true,
-            text: 'Vendor Location in %'
+            text: 'Vendor Location in %',
+            fontColor: '#ffffff'
           },
           cutoutPercentage: 0,
           
@@ -267,17 +330,17 @@ $(document).ready(function () {
     $salesMonth_modal.val(lastMonth)
     const [year, month] = lastMonth.split('-').map(Number);
 
-    $.get(`https://localhost:44371/api/SP?formonth=${month}&foryear=${year}`, function (data2) {
+    $.get(`${base_url}/SP?formonth=${month}&foryear=${year}`, function (data2) {
       $("#sFText").text(`₹${data2[0]["sP_total"]}`);
     });
 
-    $.get(`https://localhost:44371/api/POSNP`, function (data) {
+    $.get(`${base_url}/POSNP`, function (data) {
       $pOSText.text(`₹${data[0]["total"]}`);
     });
 
     $tvaText.text(`${data["tva"]}%`);
     $tvaStyle.css("width", `${data["tva"]}%`);
-    $.get("https://localhost:44371/api/all_stocks",function (data) {
+    $.get(`${base_url}/all_stocks`,function (data) {
       $stockSummaryText.text(`${data["total"]}`);
     });
   
@@ -292,7 +355,7 @@ $(document).ready(function () {
   $('input').on('change', function () {
     if (this.id === "sales_month") {
       const [year, month] = this.value.split('-').map(Number);
-      $.get(`https://localhost:44371/api/SP?formonth=${month}&foryear=${year}`, function (data) {
+      $.get(`${base_url}/SP?formonth=${month}&foryear=${year}`, function (data) {
         $sFText.text(`₹${data[0]["sP_total"]}`);
       });
     }
@@ -342,7 +405,7 @@ $(document).ready(function () {
       alert("Start Date cannot be more than End date");
       
     } else {
-      $.get(`https://localhost:44371/api/POS?Startdate=${startdate}&enddate=${enddate}`, function (data) {
+      $.get(`${base_url}/POS?Startdate=${startdate}&enddate=${enddate}`, function (data) {
         $pOSText.text(`₹${data[0]["total"]}`);
       });
     }}
@@ -384,7 +447,7 @@ $(document).ready(function () {
             </tbody>
           </table>`
         $("#sales_month_modal,#sales_month_modal_label").removeAttr("hidden");
-        url=`https://localhost:44371/api/SP_table?formonth=${month}&foryear=${year}`
+        url=`${base_url}/SP_table?formonth=${month}&foryear=${year}`
       add_table(url,table,str)
       
     }
@@ -411,7 +474,7 @@ $(document).ready(function () {
             </tbody>
           </table>`
         $("#two_inputs").removeAttr("hidden");
-        url=`https://localhost:44371/api/POS_table?Startdate=""&enddate=""`
+        url=`${base_url}/POS_table?Startdate=""&enddate=""`
       add_table(url,table,str)
     }
     else if(parent_id==="tva"){
@@ -438,13 +501,13 @@ $(document).ready(function () {
   </tbody>
 </table>
 `
-var url =`https://localhost:44371/api/stock_tblNP`
+var url =`${base_url}/stock_tblNP`
 add_table(url,table,str)
     }
 
    })
   $("#exampleModalScrollable").on("hiden.bs.modal",function(){
-    debugger;
+
     // console.log("triggered!!!!!!");
     $("#sales_month_modal,#sales_month_modal_label,#two_inputs").attr("hidden",true);
     $("#modal-body").html(" ")
@@ -457,7 +520,7 @@ add_table(url,table,str)
     const startdate = $("#POSSD_modal").val()||`""`;
     const enddate = $("#POSED_modal").val();
     let str = ""
-    const url =`https://localhost:44371/api/POS_table?Startdate=${startdate}&enddate=${enddate}`
+    const url =`${base_url}/POS_table?Startdate=${startdate}&enddate=${enddate}`
     // console.log(url);
     add_table(url,"",str=str)
   })
@@ -472,7 +535,7 @@ add_table(url,table,str)
     // console.log(lastmonth);
     const [year, month] = lastmonth.split('-').map(Number);
     let str=''
-    add_table(`https://localhost:44371/api/SP_table?formonth=${month}&foryear=${year}`,"",str=str)
+    add_table(`${base_url}/SP_table?formonth=${month}&foryear=${year}`,"",str=str)
   })
   
   // *card section Ends
@@ -491,7 +554,7 @@ add_table(url,table,str)
   $('.select2-selection--multiple').ready(function () {
     // console.log( $("#stockSelect"));
     // console.log("triggerd");
-    $.get("https://localhost:44371/api/locations",function(response){
+    $.get(`${base_url}/locations`,function(response){
       data = response
       // console.log(data);
       keys=Object.keys(data)
@@ -508,7 +571,7 @@ add_table(url,table,str)
   $('.select2-selection--multiple').ready(function () {
     // console.log( $("#stockSelect"));
     // console.log("triggerd");
-    $.get("https://localhost:44371/api/locations",function(response){
+    $.get(`${base_url}/locations`,function(response){
       data = response
       // console.log(data);
       keys=Object.keys(data)
@@ -530,7 +593,7 @@ $("#stockSelect").change(function (e) {
       lids:String($(this).val())
     }
     $.ajax({
-      url: "https://localhost:44371/api/stock/",
+      url: `${base_url}/stock/`,
       type: "POST",
       data: JSON.stringify(params),
       contentType: "application/json; charset=utf-8",
@@ -545,7 +608,7 @@ $("#stockSelect").change(function (e) {
   }
   else{
     $.ajax({
-      url: "https://localhost:44371/api/all_stocks/",
+      url: `${base_url}/all_stocks/`,
       type: "GET",
       // data: JSON.stringify(params),
       contentType: "application/json; charset=utf-8",
@@ -579,7 +642,7 @@ $("#stockSelect").change(function (e) {
   </tbody>
 </table>`)
 
-url='https://localhost:44371/api/low_qty'
+url=`${base_url}/low_qty`
 $.get(url,function(data){
   // console.log(data);
   // console.log(" str "+table);
@@ -591,7 +654,7 @@ $.get(url,function(data){
       str+='<tr class="text-light font-weight-bold bg-danger" >'
     }
     else if (element['percentage']<20){
-      str+='<tr class="text-dark font-weight-bold bg-warning" >'
+      str+='<tr class="text-dark font-weight-bold " style=" background-color:#F2C94C;" >'
     }else{
     str += `<tr class="text-light  font-weight-bold bg-success" >`;}
     a=-1
@@ -627,10 +690,10 @@ $.get(url,function(data){
 
   $("#ct2").ready(function(){
     
-    $("#ct2").append(`<table class="table  table-sm" id="expiring_tbl">
+    $("#ct2").append(`<table class="table   text-light table-sm" id="expiring_tbl">
   <thead>
-    <tr class="table-success text-grey" >
-    <th scope="col">Expiry</th>
+    <tr class="table-success text-dark" >
+    <th scope="col">Expiry    (in days)</th>
       <th scope="col">Product</th>
       <th scope="col">Total Stock</th>
       
@@ -644,7 +707,7 @@ $.get(url,function(data){
   </tbody>
 </table>`)
 
-url='https://localhost:44371/api/top10exp'
+url=`${base_url}/top10exp`
 $.get(url,function(data){
   // console.log(data);
   // console.log(" str "+table);
@@ -653,7 +716,7 @@ $.get(url,function(data){
   data.forEach(element => {
     let values = Object.values(element); // Get values of the object
     
-    str += `<tr class="text-grey  font-weight-bold " >`;
+    str += `<tr class="text-grey  font-weight-bold" >`;
     
     
     values.forEach(ele => {
@@ -691,7 +754,7 @@ $.get(url,function(data){
         lids:String($(this).val())
       }
       $.ajax({
-        url: "https://localhost:44371/api/stock_tbl/",
+        url: `${base_url}/stock_tbl/`,
         type: "POST",
         data: JSON.stringify(params),
         contentType: "application/json; charset=utf-8",
@@ -718,7 +781,7 @@ $.get(url,function(data){
     }
     else{
       $.ajax({
-        url: "https://localhost:44371/api/stock_tblNP/",
+        url: `${base_url}/stock_tblNP/`,
         type: "GET",
         // data: JSON.stringify(params),
         contentType: "application/json; charset=utf-8",
@@ -743,6 +806,8 @@ $.get(url,function(data){
   
     }
   });
+  // cookiees 
+  
   function setcookie(data){
 
     data = data.split(",");
@@ -763,6 +828,8 @@ $.get(url,function(data){
         document.cookie=`${cname}=;  max-age=-10`
     
     }
+    // cookies part end 
+    // to-do list starts 
     function addTask(task) {
       if (getcookie("tasks")!==null){
       str=getcookie("tasks")}
@@ -783,8 +850,8 @@ $.get(url,function(data){
   <span class="task-text ui-icon ui-icon-arrowthick-2-n-s ">${task}</span>
   <input type="text" class="form-control edit-input" style="display: none;" value="${task}">
   <div class="btn-group">
-    <button class="btn btn-danger btn-sm delete-btn" value="${task}">&#x2715;</button>
-    <button class="btn btn-primary btn-sm edit-btn"value=${task} hidden>&#9998;</button>
+    <button class="btn btn-success btn-sm delete-btn" value="${task}">Mark as Done</button>
+    
   </div>
 `;
       todoList.appendChild(li);}
@@ -825,21 +892,8 @@ $.get(url,function(data){
   // Event listener for edit button click
   document.getElementById("todo-list").addEventListener("click", function (event) {
       if (event.target.classList.contains("edit-btn")) {
-          const taskText = event.target.parentElement
-              .parentElement.querySelector(".task-text");
-          const editInput = event.target.parentElement
-              .parentElement.querySelector(".edit-input");
-          if (taskText.style.display !== "none") {
-              taskText.style.display = "none";
-              editInput.style.display = "block";
-              editInput.focus();
-              event.target.innerHTML = "&#10004;";
-          } else {
-              taskText.textContent = editInput.value;
-              taskText.style.display = "inline";
-              editInput.style.display = "none";
-              event.target.innerHTML = "&#9998;";
-          }
+       event.target.parentElement.parentElement.parentElement.classList.add("list-group-item-success")
+       displaymsg("success","Hooray you have Completed a task!!")
       }
   });
 if (getcookie("tasks")!==null){
@@ -847,19 +901,12 @@ if (getcookie("tasks")!==null){
   const defaultTasks = getcookie("tasks").split(",");
   defaultTasks.forEach(task => addTask(task));
 }
-
-
-    
-      
-
-
-
-
-
+// to-do list ends 
+// user specific div
 user=1
 
   // *Remove elements for non-admin users and show cards
-  $.get(`https://localhost:44371/api/getuserpermission?user=${user}`, function (response, status) {
+  $.get(`${base_url}/getuserpermission?user=${user}`, function (response, status) {
     if (Object.keys(response).length === 0) {
       $("#sales_forcasting").remove()
 $("#POsummary").remove()
@@ -889,32 +936,164 @@ $("#content").html(`<div class="alert alert-danger" role="alert">
   }
     
   });
+// top 10 peoducts 
   var ctx = document.getElementById("stk_available");
-$.get("https://localhost:44371/api/top10stk" ,function(data){
+$.get(`${base_url}/top10stk` ,function(data){
   keys=Object.keys(data)
-  // values = Object.values(data)
-  bootstrapColors = [
-    "bg-primary",
-    "bg-secondary",
-    "bg-success",
-    "bg-danger",
-    "bg-warning",
-    "bg-info"
-  ];
   value=0
   str=''
   keys.forEach(key => {
 
-    str+=`          <h4 class="small font-weight-bold text-grey">${key} <span
+    str+=` <div class="progress_div">
+             <h4 class="small font-weight-bold text-grey mt-2">${key} <span
             class="float-right text-grey">${data[key]}%</span></h4>
     <div class="progress mb-4">
-        <div class="progress-bar" role="progressbar" style="width: ${data[key]+30}%; background-color:#91ee91;"
-            aria-valuenow="${data[key]}" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar " role="progressbar" style="width: ${data[key]+30}%; background-color:#008080;"
+            aria-valuenow="${data[key]}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-placement="left" title="${key}: ${data[key]}%" ></div>
+    </div>
     </div>`
   value+=1});
 
   ctx.innerHTML=str
+  setTimeout(() => {
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+}, 500);// Delay ensures elements are fully loaded before initialization
 
 })
+//chatbot part
+
+$("#btnsubmit").click(function (e) { 
+  e.preventDefault();
+  let query = $("#queary").val();
+  userbubble=`<div class="bubble right mb-2 mt-2">${query}</div>`
+  $("#output").append(userbubble)
+  $("#queary").val('');
+  $("#output").animate({
+    scrollTop: $(
+    '#output').get(0).scrollHeight
+    }, 1000);
+    
+    
+
+  let query_encoded = encodeURIComponent(query);
+  console.log(query);
+  let url = `http://127.0.0.1:8000/get_sp_recomendation/${query_encoded}`;
+
+  $.get(url, function (data, textStatus, jqXHR) {
+      if (!data['sp_name']) {
+          alert("No stored procedure recommendation found!");
+          return;
+      }
+
+      let sp_name = data['sp_name'];
+      let params = data["params"] || {}; // Ensure params exist
+      let paramKeys = Object.keys(params);
+      let paramStr = paramKeys.map(key => `${key}=${encodeURIComponent(params[key])}`).join(';'); // Use '&' separator
+      if (paramStr==='')
+          paramStr="' '"
+      let url1 = `${base_url}/execproc?spName=${sp_name}&parameters=${encodeURI(paramStr)}`;
+      console.log(url1);
+
+      $.get(url1, function (data, textStatus, jqXHR) {
+        if (!data || (Array.isArray(data) && data.length === 0)) {
+            alert("No data returned!");
+            return;
+        }
+    
+        let outputStr = `<div class="bubble left mb-2 mt-2">`;
+    
+        // Ensure data is always an array
+        if (!Array.isArray(data)) {
+            data = [data]; // Wrap single object in an array
+        }
+    
+        console.log(data);
+        outputStr += '<table  class="display output__">';
+    
+        // Generate Table Header (Only Once)
+        outputStr += '<thead><tr>';
+        Object.keys(data[0]).forEach(element => {
+            outputStr += `<th>${element}</th>`;
+        });
+        outputStr += '</tr></thead><tbody>';
+    
+        // Generate Table Rows
+        data.forEach(row => {
+            outputStr += '<tr>';
+            Object.values(row).forEach(value => {
+            
+                outputStr += `<td>${value}</td>`; // Use <td> for data
+            });
+            outputStr += '</tr>';
+        });
+    
+        outputStr += '</tbody></table>';
+        outputStr+=`</div>`
+        console.log(outputStr);
+    
+        // Replace previous content instead of appending
+        $("#output").append(outputStr);
+
+    
+        // Initialize DataTable (after table is inserted)
+        table=$(".output__").DataTable({
+          destroy: true,
+          dom: 'lfrtip',
+         
+         buttons: [
+          { extend: 'copy' },
+          { extend: 'csv' },
+          { extend: 'excel' },
+          { extend: 'pdf' },
+          { extend: 'print' }
+        ]
+        });
+        let exportLinks = `
+  <a href="#" id="exportCopy">Copy</a> |
+  <a href="#" id="exportCsv">CSV</a> |
+  <a href="#" id="exportExcel">Excel</a> |
+  <a href="#" id="exportPdf">PDF</a> |
+  <a href="#" id="exportPrint">Print</a>
+`;
+// Append the export links to a container (you may need to create this container in your HTML or dynamically)
+$("#exportLinksContainer").html(exportLinks);
+
+// Attach click events to the hyperlinks to trigger the corresponding export actions
+$("#exportCopy").on("click", function(e) {
+  e.preventDefault();
+  table.button(0).trigger();
+});
+
+$("#exportCsv").on("click", function(e) {
+  e.preventDefault();
+  table.button(1).trigger();
+});
+
+$("#exportExcel").on("click", function(e) {
+  e.preventDefault();
+  table.button(2).trigger();
+});
+
+$("#exportPdf").on("click", function(e) {
+  e.preventDefault();
+  table.button(3).trigger();
+});
+
+$("#exportPrint").on("click", function(e) {
+  e.preventDefault();
+  table.button(4).trigger();
+});
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.error("API Error:", errorThrown);
+        $("#output").html("<p>Sorry, an error occurred while fetching data.</p>");
+    });
+    
+
+  }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error("SP Recommendation API Error:", errorThrown);
+      $("#output").html("Sorry That is Beyond My scope");
+  });
+});
 
 });

@@ -1,0 +1,222 @@
+    /* Use Bootstrap’s default .form-control styling.
+       Apply custom sizing only when needed via .custom-input */
+       .custom-input {
+        width: 48%; /* Keeps both inputs aligned in a row */
+        font-size: 1rem;
+        font-weight: 400;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+  
+
+  
+      
+  
+
+  
+      /* Ensure each input occupies equal space */  
+      /* Optional: Focus state styling for a polished look */
+
+    ::-webkit-scrollbar {
+      display: none; /* Hides scrollbar */
+  }
+  .dataTables_filter input {
+    background-color: #f0f0f0 !important; /* Light gray background */
+    color: #333 !important; /* Dark text for contrast */
+    border: 1px solid #ced4da !important; /* Optional: Border styling */
+    border-radius: 5px !important; /* Optional: Rounded corners */
+    padding: 8px !important; /* Optional: Better spacing */
+    outline: none !important; /* Removes default outline */
+    transition: all 0.3s ease-in-out !important; /* Smooth effect on focus */
+}
+
+.dataTables_filter input:focus {
+    background-color: #ffffff !important; /* Brighter background on focus */
+    border: 1px solid #90EE90 !important; /* Optional: Green border on focus */
+}
+
+  .roundbox{
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 0;
+  }
+
+  .roundbox:hover {
+    transform: scale(1.05); /* Slightly increase size */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+    z-index: 10; /* Bring it to the front */
+}
+  .-roundbox .card-header {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+  .overflow-y{
+  width: 100%; 
+  height: 58%; 
+  overflow-y: auto;
+  }
+  .overflow-x{
+    width: 100%;  
+  overflow-x: auto;
+
+  }
+  .progress_div{
+    
+    transition: all 0.3s ease-in-out;
+    
+    position: relative;
+    z-index: 0;
+  }
+  .progress_div:hover{
+    transform: scale(1.05); /* Slightly increase size */
+   
+    z-index: 10; /* Bring it to the front */
+  }
+  .chatbot{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 20000;
+    font-size: 30px;
+    height: 50px;
+    width: 50px;
+
+    border-radius: 40%;
+    padding: 5px 10px;
+
+  }
+.chat-interface{
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  z-index: 2000;
+  
+}
+.chat-interface-body{
+  height: 500px;
+  width: 500px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.close-btn{
+  color: red;
+  outline: none !important;
+}
+.close-btn:hover{
+  color: rgb(165, 1, 1);
+}
+.primary{
+  color: #008080 !important;
+}
+.labels{
+  color: #333333;
+}
+.chatinput{
+  width: 400px;
+  height: 45px;
+  position: fixed;
+  bottom: 80px;
+  margin-bottom: 10px;
+  border-radius: 30px;
+}
+.chatsend{
+  width: 45px;
+  height: 45px;
+  position: fixed;
+  bottom: 80px;
+  right:50px;
+  margin-bottom: 10px;
+  border-radius: 80%;
+  background-color: #25D366;
+
+}
+.bubble {
+  --r: 1em;  /* the radius */
+  --t: 1.5em; /* the size of the tail */
+  
+  max-width: 300px;
+  padding: 1em;
+  border-inline: var(--t) solid #0000;
+  border-radius: calc(var(--r) + var(--t))/var(--r);
+  mask: 
+    radial-gradient(100% 100% at var(--_p) 0,#0000 99%,#000 102%) 
+      var(--_p) 100%/var(--t) var(--t) no-repeat,
+    linear-gradient(#000 0 0) padding-box;
+  color: #fff;
+}
+.left {
+  --_p: 0;
+  background-color: #ECE5DD;
+  color: #000;
+  border-bottom-left-radius: 0 0;
+  place-self: start;
+  max-width: 460px;
+  overflow-y: auto;
+}
+.right {
+  --_p: 100%;
+  background-color: #DCF8C6;
+  color: #000;
+  border-bottom-right-radius: 0 0;
+  place-self: end;
+}
+.output{
+  height: 400px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.round-box-chat{
+  border-radius: 20px;
+}
+.output__ {
+  font-size: 12px; /* Reduce text size */
+  width: 100%; /* Ensure table spans full width */
+}
+
+.output__ th, 
+.output__ td {
+  padding: 4px 8px; /* Reduce padding */
+  text-align: left;
+}
+
+.output__ thead {
+  background-color: #f8f9fa; /* Light background for header */
+  font-weight: bold;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+  font-size: 12px; /* Reduce font size of controls */
+}
+
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  font-size: 12px; /* Reduce pagination & info font */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  padding: 2px 6px; /* Reduce pagination button size */
+  font-size: 11px;
+}
+.export-btn {
+  background: none;
+  border: none;
+  color: #007bff;  /* Standard link color */
+  padding: 0;
+  font-size: 0.875rem; /* Adjust text size as needed */
+  cursor: pointer;
+  text-decoration: none; /* Remove underline initially */
+}
+
+.export-btn:hover {
+  text-decoration: underline; /* Underline on hover */
+  color: #0056b3;  /* Darker shade on hover */
+}
+

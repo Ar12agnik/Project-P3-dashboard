@@ -75,24 +75,24 @@
 
             <!-- Sales Forecasting Card -->
             <div class="col-xl-3 col-md-6 mb-4 Card1 " id="sales_forcasting" hidden>
-              <div class="card  shadow h-100 py-2 roundbox " data-toggle="modal"
+              <div class="card bg-success shadow h-100 py-2 round-box " data-toggle="modal"
                 data-target="#exampleModalScrollable">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class=" font-weight-bold text-uppercase mb-3 labels">
+                      <div class="text-xs font-weight-bold text-light text-uppercase mb-3">
                         Sales Forecasting</div>
                       <!-- <label for="sales_month">For Month</label> -->
                       <input type="month" id="sales_month" class="form-control custom-input" data-bs-toggle="tooltip"
                         data-bs-placement="top" title="For month">
-                      <div class="h2 mb-0 font-weight-bold mt-3 text-center primary" id="sFText">
+                      <div class="h2 mb-0 font-weight-bold text-light mt-3 text-center" id="sFText">
                         <div class="spinner-grow" role="status">
                           <span class="visually-hidden">Loading...</span>
                         </div>
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-calendar fa-2x primary"></i>
+                      <i class="fas fa-calendar fa-2x text-light"></i>
                     </div>
                   </div>
                 </div>
@@ -101,12 +101,12 @@
 
             <!-- Purchase Order Summary Card -->
             <div class="col-xl-3 col-md-6 mb-4 Card1" id="pOsummary" hidden>
-              <div class="card shadow h-100 py-3 roundbox" data-toggle="modal"
+              <div class="card bg-success shadow h-100 py-3 round-box" data-toggle="modal"
                 data-target="#exampleModalScrollable">
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-center mb-2">
-                    <div class="font-weight-bold ">Purchase Order Summary</div>
-                    <i class="fas fa-dollar-sign fa-2x primary"></i>
+                    <div class="font-weight-bold text-white">Purchase Order Summary</div>
+                    <i class="fas fa-dollar-sign fa-2x text-white"></i>
                   </div>
 
                   <!-- Date Inputs -->
@@ -118,7 +118,7 @@
                   </div>
 
                   <!-- Amount Display -->
-                  <div class="h2 mb-0 font-weight-bold text-center primary" id="pOSText">
+                  <div class="h2 mb-0 font-weight-bold text-white text-center" id="pOSText">
                     <div class="spinner-grow" role="status">
                       <span class="visually-hidden">Loading...</span>
                     </div>
@@ -131,17 +131,17 @@
 
             <!-- Target vs Achievement Card -->
             <div class="col-xl-3 col-md-6 mb-4 Card1" id="tva" hidden>
-              <div class="card  shadow h-100 py-2 roundbox" data-toggle="modal"
+              <div class="card bg-success shadow h-100 py-2 round-box" data-toggle="modal"
                 data-target="#exampleModalScrollable">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold  text-uppercase mb-1">
+                      <div class="text-xs font-weight-bold text-light text-uppercase mb-1">
                         Target vs Achievement
                       </div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h2 mb-0 mr-3 font-weight-bold primary" id="tvaText">
+                          <div class="h2 mb-0 mr-3 font-weight-bold text-light" id="tvaText">
                             <div class="spinner-grow" role="status">
                               <span class="visually-hidden">Loading...</span>
                             </div>
@@ -149,14 +149,14 @@
                         </div>
                         <div class="col">
                           <div class="progress progress-sm mr-2">
-                            <div class="progress-bar " role="progressbar" style="background-color:#008080"
+                            <div class="progress-bar " role="progressbar" style="background-color:#F2C94C"
                               aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" id="tvastyle"></div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-clipboard-list fa-2x primary"></i>
+                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -166,12 +166,12 @@
 
             <!-- Stock Summary Card -->
             <div class="col-xl-3 col-md-6 mb-4 Card1" id="stocksummary" hidden>
-              <div class="card shadow h-100 py-2 roundbox" data-toggle="modal"
+              <div class="card bg-success shadow h-100 py-2 round-box" data-toggle="modal"
                 data-target="#exampleModalScrollable">
                 <div class="card-body">
                   <div class="d-flex flex-nowrap">
                     <span class="order-1 p-2">
-                      <div class="text-s font-weight-bold  text-uppercase mb-1">
+                      <div class="text-s font-weight-bold text-light text-uppercase mb-1">
                         Stock Summary
                       </div>
                     </span>
@@ -188,10 +188,10 @@
 
                       </div>
 
-                      <div class="h2 mb-0 font-weight-bold  text-center primary" id="stockSummaryText"></div>
+                      <div class="h2 mb-0 font-weight-bold text-light text-center" id="stockSummaryText"></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-comments fa-2x primary "></i>
+                      <i class="fas fa-comments fa-2x text-light"></i>
                     </div>
                   </div>
                 </div>
@@ -207,10 +207,10 @@
           <div class="row d-flex align-items-stretch mb-4">
             <!-- Area Chart -->
             <div class="col-xl-8 col-lg-7 Card1 " id="chart" hidden>
-              <div class="card shadow mb-4 h-100 roundbox">
+              <div class="card shadow mb-4 h-100 round-box">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between ">
-                  <h6 class="m-0 font-weight-bold primary">Earnings Overview</h6>
+                  <h6 class="m-0 font-weight-bold ">Earnings Overview</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                       aria-haspopup="true" aria-expanded="false">
@@ -231,10 +231,10 @@
 
             <!-- Second Card (Main Container) -->
             <div class="col-sm-4 d-flex align-items-stretch ">
-              <div class="card shadow h-100 w-100 roundbox ">
-                <div class="card-body Card1 overflow-auto " id="cards" hidden>
+              <div class="card h-100 w-100 round-box ">
+                <div class="card-body Card1 overflow-auto bg-success text-white" id="cards" hidden>
                   <!-- First Scrollable Card -->
-                  <h5 class="card-title font-weight-bold primary">Top 10 Products </h5>
+                  <h5 class="card-title font-weight-bold">Top 10 Products </h5>
 
                   <div class="card-body" id="stk_available" style="width: 100%; height: 350px; overflow-y: auto;">
 
@@ -257,9 +257,9 @@
             <div class="col-lg-6 mb-4 align-items-stretch">
 
               <!-- Project Card Example -->
-              <div class="card shadow mb-4 Card1 roundbox" hidden id="low_items">
+              <div class="card shadow mb-4 Card1 round-box bg-success text-white" hidden id="low_items">
 
-                <h5 class="card-title font-weight-bold ml-4 mt-4 primary">Low Stock Items</h5>
+                <h5 class="card-title font-weight-bold text-light ml-4 mt-4">Low Stock Items</h5>
 
                 <div class="card-body " id="low_stk">
 
@@ -267,10 +267,10 @@
                 </div>
               </div>
 
-              <div class="card shadow mb-3 Card1 roundbox " id="Vendor_loc" hidden>
+              <div class="card shadow mb-3 Card1 round-box bg-success text-light" id="Vendor_loc" hidden>
                 <!-- Card Header - Dropdown -->
 
-                <h5 class="m-0 font-weight-bold ml-4 mt-4 primary">Vendor Location</h5>
+                <h5 class="m-0 font-weight-bold  text-light ml-4 mt-4 ">Vendor Location</h5>
 
                 <!-- Card Body -->
                 <div class="card-body ">
@@ -282,6 +282,7 @@
                   <div class="chart-pie pt-4">
                     <canvas id="myPieChart"></canvas>
                   </div>
+                  <hr>
 
                 </div>
               </div>
@@ -292,9 +293,9 @@
             <div class="col-lg-6 mb-4 align-items-stretch">
 
               <!-- Illustrations -->
-              <div class="card shadow mb-4 Card1 roundbox overflow-x " hidden id="exp_prod">
+              <div class="card shadow mb-4 Card1 round-box overflow-x bg-success text-light" hidden id="exp_prod">
 
-                <h5 class="card-title font-weight-bold  ml-4 mt-4 primary">Expiring products</h5>
+                <h5 class="card-title font-weight-bold text-light ml-4 mt-4">Expiring products</h5>
 
                 <div class="card-body" id="ct2">
 
@@ -306,9 +307,9 @@
 
 
               </div>
-              <div class="card shadow mb-4 Card1 roundbox overflow-y " hidden>
+              <div class="card shadow mb-4 Card1 round-box overflow-y bg-success" hidden>
 
-                <h5 class="card-title font-weight-bold  ml-4 mt-4">To-Do List(Private)</h5>
+                <h5 class="card-title font-weight-bold text-light ml-4 mt-4">To-Do List(Private)</h5>
                 <div class="card-body" id="todo">
 
                   <div class="row justify-content-center">
@@ -380,8 +381,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalScrollableTitle">Modal title</h1>
-          <button type="button" class="btn btn-close " data-toggle="modal"
-            data-target="#exampleModalScrollable"></button>
+          <button type="button" class="btn close-btn" data-toggle="modal"
+            data-target="#exampleModalScrollable">X</button>
         </div>
         <div class="modal-body">
           <label for="sales_month" id="sales_month_modal_label" hidden>For Month</label>
@@ -416,18 +417,22 @@
   </div>
   <!-- Collapsible Chat Interface -->
   <div class="collapse mt-3 chat-interface" id="collapseExample">
-    <div class="card card-body chat-interface-body round-box-chat shadow-lg">
-      <div class="output" id="output">
-        <div class="bubble left">Hello I an Laura How can i help you today?</div>
-<!-- <div class="bubble right">Ok, Thank you</div> -->
+    <div class="card card-body chat-interface-body  round-box shadow-lg">
+      <div class="container">
+        <!-- Chat Output Area -->
+         <h4 id="query_show"></h4>
+        <div id="output" class="chat-container p-3 border rounded bg-light">
+          <div class="bot-message chat-bubble p-2 rounded bg-primary text-white">Hello! How can I help you?</div>
+        </div>
 
-      </div>
-      <div class="inputs">
-        <div class="mb-4" id="exportLinksContainer"> </div><br>
-        <input type="text" class="chatinput form-control" name="chatinput" id="queary" placeholder="Enter your Queary">
-        <button class="chatsend text-light btn btn-success" id="btnsubmit">
-          <i class="bi bi-send"></i>
-        </button>
+        <!-- Chat Input Section -->
+        <div class="d-flex align-items-center mt-3 inputs mb-3">
+          <input type="text" name="query" id="queary" class="form-control me-2 rounded-pill"
+            placeholder="Type a message...">
+          <button class="btn btn-success rounded-circle" id="btnsubmit">
+            <i class="bi bi-send"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

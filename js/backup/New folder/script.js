@@ -27,7 +27,7 @@ $(document).ready(function () {
         $card = $(".card"),
         $exampleModalScrollableTitle=$("#exampleModalScrollableTitle");
         
-const base_url="http://localhost:37736/api"
+const base_url="http://localhost:5135/api"
 
   // *Chart Section starts
   function getData() {
@@ -201,7 +201,7 @@ const base_url="http://localhost:37736/api"
   // Fetch data for the chart
   var myPieChart = null;  // Initialize globally to null
 
-  $.get(`${base_url}/Vendor_chart?id=200000001`, function(data) {
+  $.get(`{base_url}/Vendor_chart?id=200000001`, function(data) {
     var ctx = document.getElementById("myPieChart").getContext('2d');
     var labels = Object.keys(data);
     var values = Object.values(data);
