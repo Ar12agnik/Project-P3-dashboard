@@ -3,15 +3,32 @@ $(document).ready(function () {
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+
+    // function Putdata_select(data){
+    //   keys=Object.keys(data)
+    //   keys.forEach(key => {
+    //     var newOption = new Option(data[key],key,false,false);
+    //     $('#stockSelect').append(newOption);
+    //   });
+    //   $('#stockSelect').trigger('change');
+    // }
+
   function displaymsg(type,message){
     let alert_var=$("#alert_div")
-    // console.log($("#alert_div").classList);
+    //console.log(alert_var);
+    // //console.log($("#alert_div").classList);
     
     alert_var.addClass(`alert-${type}`)
-    alert_var.html(`${message} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`)
-    alert_var.removeAttr("hidden")
+    alert_var.html(`${message} <button type="button" class="close" id="alert_close_btn">&times;</button>`)
+    alert_var.addClass("show")
+    $("#alert_close_btn").click(function (e) { 
+      alert_var.removeClass("show")
+      alert_var.removeClass(`alert-${type}`)
+      
+    });
   }
-  
+
+  // displaymsg("success","test")
 
   // *Cache jQuery selectors
   const $salesMonth = $("#sales_month"),
@@ -29,7 +46,7 @@ $(document).ready(function () {
         
 const base_url="http://localhost:37736/api"
 
-  // *Chart Section starts
+  //*chart and Target vs achevement
   function getData() {
     $.ajax({
         url: `${base_url}/salesdatagraph`,
@@ -38,10 +55,13 @@ const base_url="http://localhost:37736/api"
         contentType: 'application/json;charset=utf-8',
         success: function (data) {
             const data2 = { "tva": 100 },
-                  keys = Object.keys(data),
-                  values = Object.values(data);
-                  console.log("*****************************************************************************");
-                  console.log(keys)
+                  // keys = Object.keys(data),
+                  // values = Object.values(data);
+                  keys=['october','November','December','January','Febuary','march']
+                  values=[300000,400000,500000,300000,600000,99999]
+
+                  //console.log("*****************************************************************************");
+                  //console.log(keys)
 
             generateChart(keys, values);
             setCardData(data2);
@@ -49,7 +69,7 @@ const base_url="http://localhost:37736/api"
         error: function (errormessage) {
             try {
                 let jsonResponse = JSON.parse(errormessage.responseText);
-                console.log(jsonResponse.Message);
+                //console.log(jsonResponse.Message);
                 
             } catch (e) {
                 console.error("Error fetching sales data:", errormessage);
@@ -57,72 +77,33 @@ const base_url="http://localhost:37736/api"
             }
         }
     });
-  }
-
-  
-
-  //const base_url = "http://localhost:5135/api";
-
-// async function getData() {
-//   try {
-//     const response = await fetch(`${base_url}/salesdatagraph`, {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json"
-//       },
-//       mode: "cors" // Ensures that cross-origin requests are allowed
-//     });
-
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
-//     }
-
-//     const data = await response.json();
-
-//     const data2 = { "tva": 100 },
-//           keys = Object.keys(data),
-//           values = Object.values(data);
-
-//     generateChart(keys, values);
-//     setCardData(data2);
-//   } catch (error) {
-//     console.error("Error fetching sales data:", error);
-//   }
-// }
-
+  }//*config for chart
   Chart.defaults.global.defaultFontFamily =
-    'Nunito, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-  Chart.defaults.global.defaultFontColor = '#858796';
+  'Nunito, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+Chart.defaults.global.defaultFontColor = '#858796';
 
-  function number_format(number, decimals, dec_point, thousands_sep) {
-    number = (number + '').replace(',', '').replace(' ', '');
-    const n = !isFinite(+number) ? 0 : +number,
-          prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-          sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-          dec = (typeof dec_point === 'undefined') ? '.' : dec_point;
-    let s = '';
-    const toFixedFix = (n, prec) => {
-      const k = Math.pow(10, prec);
-      return '' + Math.round(n * k) / k;
-    };
-    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-    if (s[0].length > 3) {
-      s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-    }
-    if ((s[1] || '').length < prec) {
-      s[1] = s[1] || '';
-      s[1] += new Array(prec - s[1].length + 1).join('0');
-    }
-    return s.join(dec);
+function number_format(number, decimals, dec_point, thousands_sep) {
+  number = (number + '').replace(',', '').replace(' ', '');
+  const n = !isFinite(+number) ? 0 : +number,
+        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+        dec = (typeof dec_point === 'undefined') ? '.' : dec_point;
+  let s = '';
+  const toFixedFix = (n, prec) => {
+    const k = Math.pow(10, prec);
+    return '' + Math.round(n * k) / k;
+  };
+  s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+  if (s[0].length > 3) {
+    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
   }
-  function Putdata_select(data){
-    keys=Object.keys(data)
-    keys.forEach(key => {
-      var newOption = new Option(data[key],key,false,false);
-      $('#stockSelect').append(newOption);
-    });
-    $('#stockSelect').trigger('change');
+  if ((s[1] || '').length < prec) {
+    s[1] = s[1] || '';
+    s[1] += new Array(prec - s[1].length + 1).join('0');
   }
+  return s.join(dec);
+}
+//* line graph
   function generateChart(keys, data) {
     const ctx = document.getElementById("myAreaChart");
     new Chart(ctx, {
@@ -132,9 +113,9 @@ const base_url="http://localhost:37736/api"
         datasets: [{
           label: "Earnings",
           lineTension: 0.3,
-          backgroundColor: "#e6ffe6",
-          borderColor: "#65a765",
-          pointRadius: 3,
+          backgroundColor: "rgba(0, 128, 128, 0.2)",
+          borderColor: "#008080",
+          pointRadius: 0,
           pointBackgroundColor: "#cdffcd",
           pointBorderColor: "#90EE90",
           pointHoverRadius: 3,
@@ -163,11 +144,12 @@ const base_url="http://localhost:37736/api"
               callback: (value) => '₹' + number_format(value)
             },
             gridLines: {
-              color: "#FFFFFF",
+              
+              color: "rgba(0, 128, 128, 0.2)",
               zeroLineColor: "rgb(234, 236, 244)",
               drawBorder: false,
               borderDash: [2],
-              zeroLineBorderDash: [2]
+              zeroLineBorderDash: [9]
             }
           }],
         },
@@ -197,7 +179,7 @@ const base_url="http://localhost:37736/api"
     });
   }
  
-
+//* vendor Pie chart
   // Fetch data for the chart
   var myPieChart = null;  // Initialize globally to null
 
@@ -256,7 +238,7 @@ const base_url="http://localhost:37736/api"
   
   $("#cht").on('change', function() {
     var id = $("#cht").val();
-    console.log(id);
+    //console.log(id);
     
     $.get(`${base_url}/Vendor_chart?id=${id}`, function(data) {
       var labels = Object.keys(data);
@@ -317,29 +299,31 @@ const base_url="http://localhost:37736/api"
 
   // * chart section ends
 
+  // *card section
   function getLastMonthDate() {
     const today = new Date();
     today.setMonth(today.getMonth() - 1);
     return today.toISOString().slice(0, 7);
   }
-// *card section
-  function setCardData(data) {
+  function setCardData(tva_data) {
     
     const lastMonth = getLastMonthDate();
     $salesMonth.val(lastMonth);
     $salesMonth_modal.val(lastMonth)
     const [year, month] = lastMonth.split('-').map(Number);
-
+    //*sales forcasting Data
     $.get(`${base_url}/SP?formonth=${month}&foryear=${year}`, function (data2) {
       $("#sFText").text(`₹${data2[0]["sP_total"]}`);
     });
-
+    //*product order summary
     $.get(`${base_url}/POSNP`, function (data) {
       $pOSText.text(`₹${data[0]["total"]}`);
     });
-
+    //*target Vs achevement
+    data=tva_data
     $tvaText.text(`${data["tva"]}%`);
     $tvaStyle.css("width", `${data["tva"]}%`);
+    //*stock Summary
     $.get(`${base_url}/all_stocks`,function (data) {
       $stockSummaryText.text(`${data["total"]}`);
     });
@@ -351,14 +335,19 @@ const base_url="http://localhost:37736/api"
   // Stop propagation for clicks on inputs and the ADV button
   $('input, span,svg,select,option,textarea,#stockSelect').on('click', (e) => e.stopPropagation());
 
-  // Update sales forecasting when sales_month changes
-  $('input').on('change', function () {
-    if (this.id === "sales_month") {
-      const [year, month] = this.value.split('-').map(Number);
-      $.get(`${base_url}/SP?formonth=${month}&foryear=${year}`, function (data) {
-        $sFText.text(`₹${data[0]["sP_total"]}`);
-      });
-    }
+
+  $("#sales_month").change(function (e) { 
+    e.preventDefault();
+    const [year, month] = this.value.split('-').map(Number);
+        $.get(`${base_url}/SP?formonth=${month}&foryear=${year}`)
+        .done(function (data) {
+          $sFText.text(`₹${data[0]["sP_total"]}`);
+        })
+        .fail(function () {
+          displaymsg("danger", "Error while Fetching data");
+        }
+        )
+    
   });
   function add_table(url, table, str) {
     $("#modal-body").append(table);
@@ -374,7 +363,13 @@ const base_url="http://localhost:37736/api"
         });
 
         if (str === "") {
-            alert("NO DATA FOUND");
+            displaymsg("danger","No data Found Try Another Month")
+            $("#table_body").html(str);
+            if ($.fn.DataTable.isDataTable("#modal_table")) {
+              $("#modal_table").DataTable().rows().remove().destroy();
+          }
+
+
         } else {
             $("#table_body").html(str);
 
@@ -414,7 +409,7 @@ const base_url="http://localhost:37736/api"
 
   // *Set Modal
   $card.on("click",function(){
-    // console.log("triggered!!!!!!");
+    // //console.log("triggered!!!!!!");
     $("#select_hidden").attr("hidden",true)
     $("#sales_month_modal,#sales_month_modal_label,#two_inputs").attr("hidden",true);
     $("#modal-body").html(" ")
@@ -508,7 +503,7 @@ add_table(url,table,str)
    })
   $("#exampleModalScrollable").on("hiden.bs.modal",function(){
 
-    // console.log("triggered!!!!!!");
+    // //console.log("triggered!!!!!!");
     $("#sales_month_modal,#sales_month_modal_label,#two_inputs").attr("hidden",true);
     $("#modal-body").html(" ")
   })
@@ -516,12 +511,12 @@ add_table(url,table,str)
     // table = $("#modal_table").DataTable()
     // table.destroy()
 
-    // console.log("Triggered!!");
+    // //console.log("Triggered!!");
     const startdate = $("#POSSD_modal").val()||`""`;
     const enddate = $("#POSED_modal").val();
     let str = ""
     const url =`${base_url}/POS_table?Startdate=${startdate}&enddate=${enddate}`
-    // console.log(url);
+    // //console.log(url);
     add_table(url,"",str=str)
   })
   $("#sales_month_modal").on("change",function(){
@@ -532,7 +527,7 @@ add_table(url,table,str)
     // }
 
     lastmonth=$("#sales_month_modal").val()
-    // console.log(lastmonth);
+    // //console.log(lastmonth);
     const [year, month] = lastmonth.split('-').map(Number);
     let str=''
     add_table(`${base_url}/SP_table?formonth=${month}&foryear=${year}`,"",str=str)
@@ -552,11 +547,11 @@ add_table(url,table,str)
     allowClear: true
   });
   $('.select2-selection--multiple').ready(function () {
-    // console.log( $("#stockSelect"));
-    // console.log("triggerd");
+    // //console.log( $("#stockSelect"));
+    // //console.log("triggerd");
     $.get(`${base_url}/locations`,function(response){
       data = response
-      // console.log(data);
+      // //console.log(data);
       keys=Object.keys(data)
       keys.forEach(key => {
         var newOption = new Option(data[key],key,false,false);
@@ -569,11 +564,11 @@ add_table(url,table,str)
     
   })
   $('.select2-selection--multiple').ready(function () {
-    // console.log( $("#stockSelect"));
-    // console.log("triggerd");
+    // //console.log( $("#stockSelect"));
+    // //console.log("triggerd");
     $.get(`${base_url}/locations`,function(response){
       data = response
-      // console.log(data);
+      // //console.log(data);
       keys=Object.keys(data)
       keys.forEach(key => {
         var newOption = new Option(data[key],key,false,false);
@@ -644,8 +639,8 @@ $("#stockSelect").change(function (e) {
 
 url=`${base_url}/low_qty`
 $.get(url,function(data){
-  // console.log(data);
-  // console.log(" str "+table);
+  // //console.log(data);
+  // //console.log(" str "+table);
   let str = ""; // Initialize the string
 
   data.forEach(element => {
@@ -709,8 +704,8 @@ $.get(url,function(data){
 
 url=`${base_url}/top10exp`
 $.get(url,function(data){
-  // console.log(data);
-  // console.log(" str "+table);
+  // //console.log(data);
+  // //console.log(" str "+table);
   let str = ""; // Initialize the string
 
   data.forEach(element => {
@@ -760,8 +755,8 @@ $.get(url,function(data){
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data){
-          // console.log(data);
-          // console.log(" str "+table);
+          // //console.log(data);
+          // //console.log(" str "+table);
           let str=''
           data.forEach(element => {
            values=Object.values(element)
@@ -835,8 +830,10 @@ $.get(url,function(data){
       str=getcookie("tasks")}
     else{
     str=''}
-    if(str.indexOf(task)!==-1)
-      console.log("cokies not added");
+    if(str.indexOf(task)!==-1){
+
+    }
+      //console.log("cokies not added");
     else{
     
     str+=`,${task}`
@@ -874,7 +871,7 @@ $.get(url,function(data){
       function (event) {
           if (event.target.classList.contains("delete-btn")) {
             temp=event.target.value
-            console.log(temp)
+            //console.log(temp)
             str=getcookie("tasks")
             str=str.replace(`${temp},`,"").trim();
             str=str.replace(`${temp}`,"").trim();
@@ -905,17 +902,17 @@ if (getcookie("tasks")!==null){
 // user specific div
 user=1
 
+
   // *Remove elements for non-admin users and show cards
   $.get(`${base_url}/getuserpermission?user=${user}`, function (response, status) {
     if (Object.keys(response).length === 0) {
       $("#sales_forcasting").remove()
-$("#POsummary").remove()
-$("#tva").remove()
-$("#stocksummary").remove()
-$("#chart").remove()
-$("#content").html(`<div class="alert alert-danger" role="alert">
-  YOU ARE NOT AUTHENTICATED TO SEE THIS PAGE
-</div>`)
+// $("#POsummary").remove()
+// $("#tva").remove()
+// $("#stocksummary").remove()
+// $("#chart").remove()
+$(".Card1").remove()
+displaymsg("danger","You are Not Authorized To view This Page")
     }else{
     
     notallowed=[]
@@ -961,10 +958,13 @@ $.get(`${base_url}/top10stk` ,function(data){
 }, 500);// Delay ensures elements are fully loaded before initialization
 
 })
-//chatbot part
-
+//!chatbot part
+//!Comment out if required 
+//!app will run without this part
+let tables=-1
 $("#btnsubmit").click(function (e) { 
   e.preventDefault();
+  
   let query = $("#queary").val();
   userbubble=`<div class="bubble right mb-2 mt-2">${query}</div>`
   $("#output").append(userbubble)
@@ -977,7 +977,7 @@ $("#btnsubmit").click(function (e) {
     
 
   let query_encoded = encodeURIComponent(query);
-  console.log(query);
+  //console.log(query);
   let url = `http://127.0.0.1:8000/get_sp_recomendation/${query_encoded}`;
 
   $.get(url, function (data, textStatus, jqXHR) {
@@ -993,14 +993,14 @@ $("#btnsubmit").click(function (e) {
       if (paramStr==='')
           paramStr="' '"
       let url1 = `${base_url}/execproc?spName=${sp_name}&parameters=${encodeURI(paramStr)}`;
-      console.log(url1);
+      //console.log(url1);
 
       $.get(url1, function (data, textStatus, jqXHR) {
         if (!data || (Array.isArray(data) && data.length === 0)) {
             alert("No data returned!");
             return;
         }
-    
+        tables+=1
         let outputStr = `<div class="bubble left mb-2 mt-2">`;
     
         // Ensure data is always an array
@@ -1008,8 +1008,8 @@ $("#btnsubmit").click(function (e) {
             data = [data]; // Wrap single object in an array
         }
     
-        console.log(data);
-        outputStr += '<table  class="display output__">';
+        //console.log(data);
+        outputStr += `<table  class="display output__" id="${tables}">`;
     
         // Generate Table Header (Only Once)
         outputStr += '<thead><tr>';
@@ -1029,15 +1029,22 @@ $("#btnsubmit").click(function (e) {
         });
     
         outputStr += '</tbody></table>';
+        outputStr+=`  <a href="#" class="exportCopy">Copy</a> |
+  <a href="#" class="exportCsv">CSV</a> |
+  <a href="#" class="exportExcel">Excel</a> |
+  <a href="#" class="exportPdf">PDF</a> |
+  <a href="#" class="exportPrint">Print</a>`
         outputStr+=`</div>`
-        console.log(outputStr);
+        //console.log(outputStr);
+        
     
         // Replace previous content instead of appending
         $("#output").append(outputStr);
 
+
     
         // Initialize DataTable (after table is inserted)
-        table=$(".output__").DataTable({
+        table=$(`#${tables}`).DataTable({
           destroy: true,
           dom: 'lfrtip',
          
@@ -1049,39 +1056,56 @@ $("#btnsubmit").click(function (e) {
           { extend: 'print' }
         ]
         });
-        let exportLinks = `
-  <a href="#" id="exportCopy">Copy</a> |
-  <a href="#" id="exportCsv">CSV</a> |
-  <a href="#" id="exportExcel">Excel</a> |
-  <a href="#" id="exportPdf">PDF</a> |
-  <a href="#" id="exportPrint">Print</a>
-`;
-// Append the export links to a container (you may need to create this container in your HTML or dynamically)
-$("#exportLinksContainer").html(exportLinks);
+//         let exportLinks = `
+//   <a href="#" id="exportCopy">Copy</a> |
+//   <a href="#" id="exportCsv">CSV</a> |
+//   <a href="#" id="exportExcel">Excel</a> |
+//   <a href="#" id="exportPdf">PDF</a> |
+//   <a href="#" id="exportPrint">Print</a>
+// `;
+// // Append the export links to a container (you may need to create this container in your HTML or dynamically)
+// $("#exportLinksContainer").html(exportLinks);
 
 // Attach click events to the hyperlinks to trigger the corresponding export actions
-$("#exportCopy").on("click", function(e) {
+$(".exportCopy").on("click", function(e) {
+  
   e.preventDefault();
+  table_id=this.parentElement.children[0].children[2].id
+  
+  table=$(`#${table_id}`).DataTable()
   table.button(0).trigger();
 });
 
-$("#exportCsv").on("click", function(e) {
+$(".exportCsv").on("click", function(e) {
   e.preventDefault();
+  table_id=this.parentElement.children[0].children[2].id
+  
+  table=$(`#${table_id}`).DataTable()
   table.button(1).trigger();
 });
 
-$("#exportExcel").on("click", function(e) {
+$(".exportExcel").on("click", function(e) {
   e.preventDefault();
+  //console.log();
+  table_id=this.parentElement.children[0].children[2].id
+  
+  table=$(`#${table_id}`).DataTable()
   table.button(2).trigger();
 });
 
-$("#exportPdf").on("click", function(e) {
+$(".exportPdf").on("click", function(e) {
   e.preventDefault();
+  table_id=this.parentElement.children[0].children[2].id
+  
+  table=$(`#${table_id}`).DataTable()
   table.button(3).trigger();
 });
 
-$("#exportPrint").on("click", function(e) {
+$(".exportPrint").on("click", function(e) {
   e.preventDefault();
+  table_id=this.parentElement.children[0].children[2].id
+  
+  table=$(`#${table_id}`).DataTable()
   table.button(4).trigger();
 });
     }).fail(function (jqXHR, textStatus, errorThrown) {
