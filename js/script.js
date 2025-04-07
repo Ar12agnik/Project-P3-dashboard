@@ -29,9 +29,6 @@ $(document).ready(function () {
         }
         
       }, step);
-    // setTimeout(()=>{
-    //   $("#alert_close_btn").trigger('click')
-    // },3000)
     $("#alert_close_btn").click(function (e) { 
       alert_var.removeClass("show")
       alert_var.removeClass(`alert-${type}`)
@@ -70,10 +67,6 @@ const base_url="http://localhost:37736/api"
             const data2 = { "tva": 100 },
                   keys = Object.keys(data),
                   values = Object.values(data);
-
-
-                  //console.log("*****************************************************************************");
-                  //console.log(keys)
             try{
             generateChart(keys, values);
             }
@@ -84,12 +77,9 @@ const base_url="http://localhost:37736/api"
         },
         error: function (errormessage) {
             try {
-                let jsonResponse = JSON.parse(errormessage.responseText);
-                //console.log(jsonResponse.Message);
-                
+                let jsonResponse = JSON.parse(errormessage.responseText);               
             } catch (e) {
                 console.error("Error fetching sales data:", errormessage);
-               // toastr.error("An error occurred while fetching sales data.");
             }
         }
     });
@@ -119,7 +109,6 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   }
   return s.join(dec);
 }
-//* line graph
   function generateChart(keys, data) {
     const ctx = document.getElementById("myAreaChart");
     new Chart(ctx, {
@@ -196,7 +185,6 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   }
  
 //* vendor Pie chart
-  // Fetch data for the chart
   var myPieChart = null;  // Initialize globally to null
 
   $.get(`${base_url}/Vendor_chart?id=200000001`, function(data) {
@@ -237,7 +225,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
           position: 'right',
           labels: {
             boxWidth: 20,
-            // fontColor: '#FFFFFF'
+            
 
           }
         },
@@ -254,13 +242,12 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   
   $("#cht").on('change', function() {
     var id = $("#cht").val();
-    //console.log(id);
+
     
     $.get(`${base_url}/Vendor_chart?id=${id}`, function(data) {
       var labels = Object.keys(data);
       var values = Object.values(data);
   
-      // 🛠 Check if myPieChart exists and is a valid Chart instance
       if (myPieChart instanceof Chart) {
         myPieChart.destroy();
       }
@@ -387,15 +374,10 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 
         } else {
-          // console.log(str);
           if ($.fn.DataTable.isDataTable("#modal_table")) {
               $("#modal_table").DataTable().destroy();
           }
             $("#table_body").html(str);
-
-            // Destroy any existing DataTable instance before creating a new one
-
-            // Initialize DataTable correctly
             $("#modal_table").DataTable({
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
@@ -417,26 +399,11 @@ function number_format(number, decimals, dec_point, thousands_sep) {
             
         $pOSText.text(`₹${data[0]["total"]}`);
       });
-    // e.preventDefault();
-    // const startdate = $("#POSSD").val(),
-    //       enddate = $("#POSED").val();
-    //       if(startdate===""){
-    //         alert("please fill the startdate first")
-    //       }else{
-    // if (startdate > enddate) {
-    //   alert("Start Date cannot be more than End date");
-      
-    // } else {
-    //   $.get(`${base_url}/POS?Startdate=${startdate}&enddate=${enddate}`, function (data) {
-    //     $pOSText.text(`₹${data[0]["total"]}`);
-    //   });
-    // }}
   });
 
 
   // *Set Modal
   $card.on("click",function(){
-    // //console.log("triggered!!!!!!");
     $("#select_hidden").attr("hidden",true)
     $("#sales_month_modal,#sales_month_modal_label,#two_inputs").attr("hidden",true);
     $("#modal-body").html(" ")
@@ -445,7 +412,6 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     const parent_id=$(this).parent().attr("id")
     if(parent_id==="sales_forcasting"){
       $exampleModalScrollableTitle.text("Sales Forcasting modal")
-      // lastMonth = getLastMonthDate()
       month_preset_modal=$("#sales_month_modal").val()
        lastMonth=month_preset_modal
       const [year, month] = lastMonth.split('-').map(Number);
@@ -532,31 +498,19 @@ add_table(url,table,str)
    })
   $("#exampleModalScrollable").on("hiden.bs.modal",function(){
 
-    // //console.log("triggered!!!!!!");
     $("#sales_month_modal,#sales_month_modal_label,#two_inputs").attr("hidden",true);
     $("#modal-body").html(" ")
   })
-  $("#POSED_modal").on("change",function(){
-    // table = $("#modal_table").DataTable()
-    // table.destroy()
-
-  
+  $("#POSED_modal").on("change",function(){ 
     const startdate = $("#POSSD_modal").val()||`""`;
     const enddate = $("#POSED_modal").val();
     let str = ""
     const url =`${base_url}/POS_table?Startdate=${startdate}&enddate=${enddate}`
-    // //console.log(url);
     add_table(url,"",str=str)
   })
   $("#sales_month_modal").on("change",function(){
-    // if($("table_body").innerHTML !=='<tr><td class="table-danger text-dark"colspan="9"><centre>No Data Found</centre></td></tr>' ){
-    //   table = $("#modal_table").DataTable()
-    //   table.destroy()
-  
-    // }
 
     lastmonth=$("#sales_month_modal").val()
-    // //console.log(lastmonth);
     const [year, month] = lastmonth.split('-').map(Number);
     let str=''
     add_table(`${base_url}/SP_table?formonth=${month}&foryear=${year}`,str=str)
@@ -575,11 +529,8 @@ add_table(url,table,str)
     allowClear: true
   });
   $('.select2-selection--multiple').ready(function () {
-    // //console.log( $("#stockSelect"));
-    // //console.log("triggerd");
     $.get(`${base_url}/locations`,function(response){
       data = response
-      // //console.log(data);
       keys=Object.keys(data)
       keys.forEach(key => {
         var newOption = new Option(data[key],key,false,false);
@@ -592,11 +543,8 @@ add_table(url,table,str)
     
   })
   $('.select2-selection--multiple').ready(function () {
-    // //console.log( $("#stockSelect"));
-    // //console.log("triggerd");
     $.get(`${base_url}/locations`,function(response){
       data = response
-      // //console.log(data);
       keys=Object.keys(data)
       keys.forEach(key => {
         var newOption = new Option(data[key],key,false,false);
@@ -633,7 +581,6 @@ $("#stockSelect").change(function (e) {
     $.ajax({
       url: `${base_url}/all_stocks/`,
       type: "GET",
-      // data: JSON.stringify(params),
       contentType: "application/json; charset=utf-8",
       dataType: "json",
       success: function(response) {
@@ -667,8 +614,6 @@ $("#stockSelect").change(function (e) {
 
 url=`${base_url}/low_qty`
 $.get(url,function(data){
-  // //console.log(data);
-  // //console.log(" str "+table);
   let str = ""; // Initialize the string
 
   data.forEach(element => {
@@ -696,9 +641,7 @@ $.get(url,function(data){
   
   
   if (str ===""){
-   
-    // str+=`<tr><td class="table-success text-dark"colspan="9"><centre>Hurray! No Expiring Products within 60 days</centre></td></tr>`
-    $("#ct2").html()
+       $("#ct2").html()
     str=`<h1 class="text-success">Hurray no Expiring products Within 60 days! </h1>`
     $("#ct2").html(str)
   }
@@ -732,8 +675,6 @@ $.get(url,function(data){
 
 url=`${base_url}/top10exp`
 $.get(url,function(data){
-  // //console.log(data);
-  // //console.log(" str "+table);
   let str = ""; // Initialize the string
 
   data.forEach(element => {
@@ -750,12 +691,11 @@ $.get(url,function(data){
    
   });
   
-  // Now, `str` contains the table rows
+
   
   
   if (str ===""){
    
-    // str+=`<tr><td class="table-success text-dark"colspan="9"><centre>Hurray! No Expiring Products within 60 days</centre></td></tr>`
     $("#ct2").html()
     str=`<h3 class="text-success font-weight-bold text-center"><i class="bi bi-check-circle-fill"></i> Hurray no Expiring products within 60 days </h3>`
     $("#ct2").html(str)
@@ -784,8 +724,6 @@ $.get(url,function(data){
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data){
-          // //console.log(data);
-          // //console.log(" str "+table);
           let str=''
           data.forEach(element => {
            values=Object.values(element)
@@ -813,7 +751,6 @@ $.get(url,function(data){
       $.ajax({
         url: `${base_url}/stock_tblNP/`,
         type: "GET",
-        // data: JSON.stringify(params),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
@@ -872,7 +809,6 @@ $.get(url,function(data){
     if(str.indexOf(task)!==-1){
 
     }
-      //console.log("cokies not added");
     else{
     
     str+=`,${task}`
@@ -928,7 +864,6 @@ $.get(url,function(data){
   // Event listener for edit button click
   document.getElementById("todo-list").addEventListener("click", function (event) {
       if (event.target.classList.contains("delete-btn")) {
-      //  event.target.parentElement.parentElement.parentElement.classList.add("list-group-item-success")
        displaymsg("success","Hooray you have Completed a task!!")
       }
   });
@@ -977,7 +912,6 @@ $("#queary").keydown(function (e) {
 
   }
   else if(e.key === "Escape" || e.keyCode === 27){
-    // alert("focus Out")
     $(this).trigger('blur')
   }
 });
@@ -1013,7 +947,6 @@ $("#btnsubmit").click(function (e) {
       if (paramStr==='')
           paramStr="' '"
       let url1 = `${base_url}/execproc?spName=${sp_name}&parameters=${encodeURI(paramStr)}`;
-      //console.log(url1);
 
       $.get(url1, function (data, textStatus, jqXHR) {
         if (!data || (Array.isArray(data) && data.length === 0)) {
@@ -1028,7 +961,6 @@ $("#btnsubmit").click(function (e) {
             data = [data]; // Wrap single object in an array
         }
     
-        //console.log(data);
         outputStr += `<table  class="display output__" id="${tables}">`;
     
         // Generate Table Header (Only Once)
@@ -1055,7 +987,6 @@ $("#btnsubmit").click(function (e) {
   <a href="#" class="exportPdf"><i class="bi bi-filetype-pdf"></i></a> |
   <a href="#" class="exportPrint"><i class="bi bi-printer"></i></a>`
         outputStr+=`</div>`
-        //console.log(outputStr);
         
     
         // Replace previous content instead of appending
@@ -1076,16 +1007,6 @@ $("#btnsubmit").click(function (e) {
           { extend: 'print' }
         ]
         });
-//         let exportLinks = `
-//   <a href="#" id="exportCopy">Copy</a> |
-//   <a href="#" id="exportCsv">CSV</a> |
-//   <a href="#" id="exportExcel">Excel</a> |
-//   <a href="#" id="exportPdf">PDF</a> |
-//   <a href="#" id="exportPrint">Print</a>
-// `;
-// // Append the export links to a container (you may need to create this container in your HTML or dynamically)
-// $("#exportLinksContainer").html(exportLinks);
-
 // Attach click events to the hyperlinks to trigger the corresponding export actions
 $(".exportCopy").on("click", function(e) {
   
@@ -1106,7 +1027,6 @@ $(".exportCsv").on("click", function(e) {
 
 $(".exportExcel").on("click", function(e) {
   e.preventDefault();
-  //console.log();
   table_id=this.parentElement.children[0].children[2].id
   
   table=$(`#${table_id}`).DataTable()
@@ -1147,10 +1067,6 @@ user=1
   $.get(`${base_url}/getuserpermission?user=${user}`, function (response, status) {
     if (Object.keys(response).length === 0) {
       $("#sales_forcasting").remove()
-// $("#POsummary").remove()
-// $("#tva").remove()
-// $("#stocksummary").remove()
-// $("#chart").remove()
 $(".Card1").remove()
 displaymsg("danger","You are Not Authorized To view This Page")
     }else{
