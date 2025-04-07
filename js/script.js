@@ -4,28 +4,41 @@ $(document).ready(function () {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // function Putdata_select(data){
-    //   keys=Object.keys(data)
-    //   keys.forEach(key => {
-    //     var newOption = new Option(data[key],key,false,false);
-    //     $('#stockSelect').append(newOption);
-    //   });
-    //   $('#stockSelect').trigger('change');
-    // }
-
   function displaymsg(type,message){
-    let alert_var=$("#alert_div")
-    //console.log(alert_var);
-    // //console.log($("#alert_div").classList);
-    
+    let alert_var=$("#alert_div")    
     alert_var.addClass(`alert-${type}`)
-    alert_var.html(`${message} <button type="button" class="close" id="alert_close_btn">&times;</button>`)
+    alert_var.html(`${message} <button type="button" class="close" id="alert_close_btn">&times;</button> <div id="progress" class="progress progress-alert"></div>`)
+    
     alert_var.addClass("show")
+    alert_var.ready(()=>{
+      progressbar=document.querySelector("#progress")
+      progressbar.style.width = "100%"
+      let duration = 3000; // 3 seconds
+      let step = 10;
+      let decrement = (100 / (duration / step));
+      let intervel = setInterval(() => {
+        let width = parseFloat(progressbar.style.width);
+        // console.log(width);
+        if (width<=0.9){
+          console.log("hello");
+          clearInterval(intervel);
+          $("#alert_close_btn").trigger("click")
+        }
+        else{
+          progressbar.style.width= (width-decrement)+"%"
+        }
+        
+      }, step);
+    // setTimeout(()=>{
+    //   $("#alert_close_btn").trigger('click')
+    // },3000)
     $("#alert_close_btn").click(function (e) { 
       alert_var.removeClass("show")
       alert_var.removeClass(`alert-${type}`)
       
     });
+    })
+    
   }
 
   // displaymsg("success","test")
@@ -49,21 +62,24 @@ const base_url="http://localhost:37736/api"
   //*chart and Target vs achevement
   function getData() {
     $.ajax({
-        url: `${base_url}/salesdatagraph`,
+        url: `${base_url}/getPredictions`,
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json;charset=utf-8',
         success: function (data) {
             const data2 = { "tva": 100 },
-                  // keys = Object.keys(data),
-                  // values = Object.values(data);
-                  keys=['october','November','December','January','Febuary','march']
-                  values=[300000,400000,500000,300000,600000,99999]
+                  keys = Object.keys(data),
+                  values = Object.values(data);
+
 
                   //console.log("*****************************************************************************");
                   //console.log(keys)
-
+            try{
             generateChart(keys, values);
+            }
+            catch{
+
+            }
             setCardData(data2);
         },
         error: function (errormessage) {
@@ -111,7 +127,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
       data: {
         labels: keys,
         datasets: [{
-          label: "Earnings",
+          label: "Predicted ",
           lineTension: 0.3,
           backgroundColor: "rgba(0, 128, 128, 0.2)",
           borderColor: "#008080",
@@ -306,7 +322,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     return today.toISOString().slice(0, 7);
   }
   function setCardData(tva_data) {
-    
+    //sales forcasting
     const lastMonth = getLastMonthDate();
     $salesMonth.val(lastMonth);
     $salesMonth_modal.val(lastMonth)
@@ -333,7 +349,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   // * event bindings
 
   // Stop propagation for clicks on inputs and the ADV button
-  $('input, span,svg,select,option,textarea,#stockSelect').on('click', (e) => e.stopPropagation());
+  $('input, span,select,option,textarea,#stockSelect').on('click', (e) => e.stopPropagation());
 
 
   $("#sales_month").change(function (e) { 
@@ -363,7 +379,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
         });
 
         if (str === "") {
-            displaymsg("danger","No data Found Try Another Month")
+            displaymsg("danger","No data Found")
             $("#table_body").html(str);
             if ($.fn.DataTable.isDataTable("#modal_table")) {
               $("#modal_table").DataTable().rows().remove().destroy();
@@ -371,12 +387,13 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 
         } else {
+          // console.log(str);
+          if ($.fn.DataTable.isDataTable("#modal_table")) {
+              $("#modal_table").DataTable().destroy();
+          }
             $("#table_body").html(str);
 
             // Destroy any existing DataTable instance before creating a new one
-            if ($.fn.DataTable.isDataTable("#modal_table")) {
-                $("#modal_table").DataTable().destroy();
-            }
 
             // Initialize DataTable correctly
             $("#modal_table").DataTable({
@@ -390,20 +407,30 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 
   $POSED.on('change', function (e) {
-    e.preventDefault();
-    const startdate = $("#POSSD").val(),
+        let startdate = $("#POSSD").val(),
           enddate = $("#POSED").val();
-          if(startdate==+""){
-            alert("please fill the startdate first")
-          }else{
-    if (startdate > enddate) {
-      alert("Start Date cannot be more than End date");
+        if(startdate===""){
+          startdate=null
+        }
       
-    } else {
-      $.get(`${base_url}/POS?Startdate=${startdate}&enddate=${enddate}`, function (data) {
+          $.get(encodeURI(`${base_url}/POS?Startdate=${startdate}&enddate=${enddate}`), function (data) {
+            
         $pOSText.text(`₹${data[0]["total"]}`);
       });
-    }}
+    // e.preventDefault();
+    // const startdate = $("#POSSD").val(),
+    //       enddate = $("#POSED").val();
+    //       if(startdate===""){
+    //         alert("please fill the startdate first")
+    //       }else{
+    // if (startdate > enddate) {
+    //   alert("Start Date cannot be more than End date");
+      
+    // } else {
+    //   $.get(`${base_url}/POS?Startdate=${startdate}&enddate=${enddate}`, function (data) {
+    //     $pOSText.text(`₹${data[0]["total"]}`);
+    //   });
+    // }}
   });
 
 
@@ -418,7 +445,9 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     const parent_id=$(this).parent().attr("id")
     if(parent_id==="sales_forcasting"){
       $exampleModalScrollableTitle.text("Sales Forcasting modal")
-      lastMonth = getLastMonthDate()
+      // lastMonth = getLastMonthDate()
+      month_preset_modal=$("#sales_month_modal").val()
+       lastMonth=month_preset_modal
       const [year, month] = lastMonth.split('-').map(Number);
       let str=''
       let table= `
@@ -511,7 +540,7 @@ add_table(url,table,str)
     // table = $("#modal_table").DataTable()
     // table.destroy()
 
-    // //console.log("Triggered!!");
+  
     const startdate = $("#POSSD_modal").val()||`""`;
     const enddate = $("#POSED_modal").val();
     let str = ""
@@ -530,13 +559,12 @@ add_table(url,table,str)
     // //console.log(lastmonth);
     const [year, month] = lastmonth.split('-').map(Number);
     let str=''
-    add_table(`${base_url}/SP_table?formonth=${month}&foryear=${year}`,"",str=str)
+    add_table(`${base_url}/SP_table?formonth=${month}&foryear=${year}`,str=str)
   })
   
   // *card section Ends
 
-  // *Entry Point: Load chart & card data, toggle form visibility
-  getData();
+
   // * multiple Select
   $('#stockSelect').select2({
     placeholder: " Stock Location",
@@ -671,7 +699,7 @@ $.get(url,function(data){
    
     // str+=`<tr><td class="table-success text-dark"colspan="9"><centre>Hurray! No Expiring Products within 60 days</centre></td></tr>`
     $("#ct2").html()
-    str=`<h1 class="text-success">Hurray! no Expiring products! </h1>`
+    str=`<h1 class="text-success">Hurray no Expiring products Within 60 days! </h1>`
     $("#ct2").html(str)
   }
   
@@ -729,7 +757,7 @@ $.get(url,function(data){
    
     // str+=`<tr><td class="table-success text-dark"colspan="9"><centre>Hurray! No Expiring Products within 60 days</centre></td></tr>`
     $("#ct2").html()
-    str=`<h1 class="text-success">Hurray! no Expiring products! </h1>`
+    str=`<h3 class="text-success font-weight-bold text-center"><i class="bi bi-check-circle-fill"></i> Hurray no Expiring products within 60 days </h3>`
     $("#ct2").html(str)
   }
   
@@ -744,6 +772,7 @@ $.get(url,function(data){
   
   $("#stockSelect2").change(function (e) { 
     e.preventDefault();
+    $("#modal_table").DataTable().destroy()
     if ($(this).val()!="") {
       var params ={
         lids:String($(this).val())
@@ -768,6 +797,12 @@ $.get(url,function(data){
            str+="</tr>"
           })
           $("#table_body").html(str)
+
+          $("#modal_table").DataTable({
+            dom:"Bfrtip"
+            , destroy:true
+          }
+          )
         },
         error: function(error) {
           console.error("Error fetching stock details:", error);
@@ -793,6 +828,10 @@ $.get(url,function(data){
            str+="</tr>"
           })
           $("#table_body").html(str)
+          $("#modal_table").DataTable({
+            dom:"Bfrtip",
+            destroy:true
+          })
         },
         error: function(error) {
           console.error("Error fetching stock details:", error);
@@ -888,8 +927,8 @@ $.get(url,function(data){
 
   // Event listener for edit button click
   document.getElementById("todo-list").addEventListener("click", function (event) {
-      if (event.target.classList.contains("edit-btn")) {
-       event.target.parentElement.parentElement.parentElement.classList.add("list-group-item-success")
+      if (event.target.classList.contains("delete-btn")) {
+      //  event.target.parentElement.parentElement.parentElement.classList.add("list-group-item-success")
        displaymsg("success","Hooray you have Completed a task!!")
       }
   });
@@ -900,39 +939,8 @@ if (getcookie("tasks")!==null){
 }
 // to-do list ends 
 // user specific div
-user=1
+// !Entry Point: Load chart & card data, toggle form visibility
 
-
-  // *Remove elements for non-admin users and show cards
-  $.get(`${base_url}/getuserpermission?user=${user}`, function (response, status) {
-    if (Object.keys(response).length === 0) {
-      $("#sales_forcasting").remove()
-// $("#POsummary").remove()
-// $("#tva").remove()
-// $("#stocksummary").remove()
-// $("#chart").remove()
-$(".Card1").remove()
-displaymsg("danger","You are Not Authorized To view This Page")
-    }else{
-    
-    notallowed=[]
-    divs=Object.keys(response)
-    divs.forEach(div => {
-      
-      if(response[div]===0){
-        notallowed.push(div)
-      }
-    });
-
-   notallowed.forEach(element => {
-    
-
-    $(`#${element}`).remove()
-   });
-    $(".Card1").removeAttr("hidden");
-  }
-    
-  });
 // top 10 peoducts 
   var ctx = document.getElementById("stk_available");
 $.get(`${base_url}/top10stk` ,function(data){
@@ -944,9 +952,9 @@ $.get(`${base_url}/top10stk` ,function(data){
     str+=` <div class="progress_div">
              <h4 class="small font-weight-bold text-grey mt-2">${key} <span
             class="float-right text-grey">${data[key]}%</span></h4>
-    <div class="progress mb-4">
+    <div class="progress mb-4" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${key}: ${data[key]}%">
         <div class="progress-bar " role="progressbar" style="width: ${data[key]+30}%; background-color:#008080;"
-            aria-valuenow="${data[key]}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-placement="left" title="${key}: ${data[key]}%" ></div>
+            aria-valuenow="${data[key]}" aria-valuemin="0" aria-valuemax="100"  ></div>
     </div>
     </div>`
   value+=1});
@@ -962,7 +970,19 @@ $.get(`${base_url}/top10stk` ,function(data){
 //!Comment out if required 
 //!app will run without this part
 let tables=-1
+$("#queary").keydown(function (e) { 
+  if (e.key==='Enter'|| e.keyCode===13) {
+    
+    $("#btnsubmit").trigger('click')
+
+  }
+  else if(e.key === "Escape" || e.keyCode === 27){
+    // alert("focus Out")
+    $(this).trigger('blur')
+  }
+});
 $("#btnsubmit").click(function (e) { 
+
   e.preventDefault();
   
   let query = $("#queary").val();
@@ -1029,11 +1049,11 @@ $("#btnsubmit").click(function (e) {
         });
     
         outputStr += '</tbody></table>';
-        outputStr+=`  <a href="#" class="exportCopy">Copy</a> |
-  <a href="#" class="exportCsv">CSV</a> |
-  <a href="#" class="exportExcel">Excel</a> |
-  <a href="#" class="exportPdf">PDF</a> |
-  <a href="#" class="exportPrint">Print</a>`
+        outputStr+=`  <a href="#" class="exportCopy"><i class="bi bi-clipboard"></i></a> |
+  <a href="#" class="exportCsv"><i class="bi bi-filetype-csv"></i></a> |
+  <a href="#" class="exportExcel"><i class="bi bi-file-earmark-excel"></i></a> |
+  <a href="#" class="exportPdf"><i class="bi bi-filetype-pdf"></i></a> |
+  <a href="#" class="exportPrint"><i class="bi bi-printer"></i></a>`
         outputStr+=`</div>`
         //console.log(outputStr);
         
@@ -1116,8 +1136,42 @@ $(".exportPrint").on("click", function(e) {
 
   }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error("SP Recommendation API Error:", errorThrown);
-      $("#output").html("Sorry That is Beyond My scope");
+      $("#output").append(`<div class="bubble left mb-2 mt-2">Sorry that is beyond  my current scope <div class="small">For more detailes check Console</div></div>`);
   });
 });
+getData();
+user=1
+
+
+  // *Remove elements for non-admin users and show cards
+  $.get(`${base_url}/getuserpermission?user=${user}`, function (response, status) {
+    if (Object.keys(response).length === 0) {
+      $("#sales_forcasting").remove()
+// $("#POsummary").remove()
+// $("#tva").remove()
+// $("#stocksummary").remove()
+// $("#chart").remove()
+$(".Card1").remove()
+displaymsg("danger","You are Not Authorized To view This Page")
+    }else{
+    
+    notallowed=[]
+    divs=Object.keys(response)
+    divs.forEach(div => {
+      
+      if(response[div]===0){
+        notallowed.push(div)
+      }
+    });
+
+   notallowed.forEach(element => {
+    
+
+    $(`#${element}`).remove()
+   });
+    $(".Card1").removeAttr("hidden");
+  }
+    
+  });
 
 });

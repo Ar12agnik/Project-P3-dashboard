@@ -20,9 +20,8 @@
       /* Ensure each input occupies equal space */  
       /* Optional: Focus state styling for a polished look */
 
-    ::-webkit-scrollbar {
-      display: none; /* Hides scrollbar */
-  }
+
+
   .dataTables_filter input {
     background-color: #f0f0f0 !important; /* Light gray background */
     color: #333 !important; /* Dark text for contrast */
@@ -119,13 +118,19 @@
 .labels{
   color: #333333;
 }
-.chatinput{
+.chatinput ,.chatinput:focus{
   width: 400px;
   height: 45px;
   position: fixed;
   bottom: 80px;
   margin-bottom: 10px;
   border-radius: 30px;
+  background-color: #d6d6d6;
+  color: rgb(0, 0, 0);
+}
+.chatinput::placeholder {
+  color: rgb(0, 0, 0);
+  opacity: 0.7; /* Firefox */
 }
 .chatsend{
   width: 45px;
@@ -230,7 +235,7 @@
   top: 10px;
   right: 20px;
   z-index:2000;/*!Boostrap-modal has a z index of 1055*/
-  border-radius: 15px;
+  border-radius: 20px;
 }
 .alert-danger{
   background-color: #CA0B00;
@@ -255,3 +260,18 @@ input{
 .select2-selection{
   border: none !important;
 }
+a{
+  text-decoration: none;
+  color: #000 !important;
+  font-size: large;
+}
+ .progress-alert {
+            height: 5px;
+            background: #fff;
+            width: 100%;
+            transition: width linear;
+        }
+        tr.bg-danger>td  {
+          /* background-color: red !important; Example */
+          color: white !important;
+      }
