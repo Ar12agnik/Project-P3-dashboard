@@ -2,13 +2,14 @@
 using System.Numerics;
 using System.Text.Json.Nodes;
 using dashboard.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.SqlClient;
 namespace dashboard.DAL
 
 {
     public class dashboardDAL
     {
-        string constring = "Data Source=192.168.10.113,1433;Initial Catalog=P3;Persist Security Info=True;User ID=agnik;Password=Abcd@12345;Trust Server Certificate=True";
+        string constring = "Data Source=125.22.105.182,1433;Initial Catalog=P3;Persist Security Info=True;User ID=agnik;Password=Abcd@12345;Trust Server Certificate=True";
         public JsonArray getSalesProjection(int formonth, int foryear)
         {
             JsonArray arr = new JsonArray();
@@ -45,6 +46,10 @@ namespace dashboard.DAL
             JsonArray arr = new JsonArray();
             using (SqlConnection con = new SqlConnection(constring))
             {
+                if (startdate == "null")
+                {
+                    startdate="";
+                }
                 SqlCommand cmd = new SqlCommand("PRC_P3Dash_Get_Product_order_summary", con);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@StartDate", startdate);
@@ -363,13 +368,16 @@ namespace dashboard.DAL
                 {
                     Top10exp stk = new Top10exp();
                     stk.Expiry = Convert.ToInt32(rdr["expiry"]);
+                    if (stk.Expiry > 0)
+                    {
                     stk.Product = Convert.ToString(rdr["Product"]);
-                    stk.totalStock = Convert.ToDecimal(rdr["totalStock"]);
-                    
-                    stk.StockLocation = Convert.ToString(rdr["StockLocation"]);
-                    
-                    stk.Category = Convert.ToString(rdr["Category"]);
-                    json.Add(stk);
+                        stk.totalStock = Convert.ToDecimal(rdr["totalStock"]);
+
+                        stk.StockLocation = Convert.ToString(rdr["StockLocation"]);
+
+                        stk.Category = Convert.ToString(rdr["Category"]);
+                        json.Add(stk);
+                    }
 
                 }
                 con.Close();
@@ -517,6 +525,32 @@ namespace dashboard.DAL
                 }
             }
             return parameters;
+        }
+        public Dictionary<string, int> get_prediction_sales()
+        {
+            Dictionary<string, int> salesData = new Dictionary<string, int>();
+
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                SqlCommand cmd = new SqlCommand("PRC_P3Dash_get_sales_prediction", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    int month = Convert.ToInt32(rdr["Month"]);
+                    int year = Convert.ToInt32(rdr["Year"]);
+                    string dateKey = $"{month}/{year}";  // Format: "MM/YYYY"
+                    int amount = Convert.ToInt32(rdr["Total billed amount"]);
+
+                    salesData[dateKey] = amount;  // Add to dictionary
+                }
+                rdr.Close();
+            }
+
+            return salesData;
         }
 
 

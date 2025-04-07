@@ -1,4 +1,5 @@
-﻿using dashboard.Models;
+﻿using dashboard.DAL;
+using dashboard.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -128,7 +129,12 @@ namespace dashboard.Controllers
             Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type, Authorization");
             return Ok();
         }
-
+        [HttpGet("getPredictions")]
+        public JsonResult get_prediction_sales()
+        {
+            dashboardDAL dd = new dashboardDAL();
+            return Json( dd.get_prediction_sales());
+        }
 
     }
 }
