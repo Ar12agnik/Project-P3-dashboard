@@ -3,6 +3,18 @@ $(document).ready(function () {
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+    function hiddenPreloader() {
+      let preloader = document.getElementById('preloader');
+    
+      setTimeout(() => {
+        preloader.classList.add('preloader--invisible');
+        document.querySelector('html').style.overflowY = 'auto';
+    
+        setTimeout(() => {
+          preloader.classList.add('preloader--hidden');
+        }, 500)
+      }, 2000)
+    }
 
   function displaymsg(type,message){
     let alert_var=$("#alert_div")    
@@ -418,7 +430,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
       let str=''
       let table= `
 
-          <table class="table table-successs" id="modal_table">
+          <table class="table table-successs overflow-x" id="modal_table">
             <thead>
               <tr class="table-dark">
                 <th scope="col">forecastingForMonth</th>
@@ -1069,6 +1081,7 @@ user=1
     if (Object.keys(response).length === 0) {
       $("#sales_forcasting").remove()
 $(".Card1").remove()
+hiddenPreloader();
 displaymsg("danger","You are Not Authorized To view This Page")
     }else{
     
@@ -1087,6 +1100,7 @@ displaymsg("danger","You are Not Authorized To view This Page")
     $(`#${element}`).remove()
    });
     $(".Card1").removeAttr("hidden");
+    hiddenPreloader();
   }
     
   });
