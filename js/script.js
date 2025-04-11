@@ -935,8 +935,9 @@ $("#btnsubmit").click(function (e) {
   let url = `http://127.0.0.1:8000/get_sp_recomendation/${query_encoded}`;
 
   $.get(url, function (data, textStatus, jqXHR) {
-      if (!data['sp_name']) {
-          alert("No stored procedure recommendation found!");
+      if (!data['sp_name'] || data['confidence']<=0.40) {
+        $("#output").append(`<div class="bubble left mb-2 mt-2">Sorry I couldn't understand what you are trying to say😅</div>`);
+
           return;
       }
 
