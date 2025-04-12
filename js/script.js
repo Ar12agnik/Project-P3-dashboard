@@ -15,6 +15,12 @@ $(document).ready(function () {
         }, 500)
       }, 2000)
     }
+    function failpage(){
+      $(".preloader__logo").remove()
+      $("#preloader").removeClass("preloader--invisible")
+      $("#preloader").removeClass("preloader--hidden")
+      $(".loader").removeClass("visually-hidden")
+    }
 
   function displaymsg(type,message){
     let alert_var=$("#alert_div")    
@@ -308,7 +314,11 @@ function number_format(number, decimals, dec_point, thousands_sep) {
           
         }
       });
+    })
+    .fail(function (){
+      failpage()
     });
+    ;
   });
   
 
@@ -358,11 +368,9 @@ function number_format(number, decimals, dec_point, thousands_sep) {
         .done(function (data) {
           $sFText.text(`₹${data[0]["sP_total"]}`);
         })
-        .fail(function () {
-          displaymsg("danger", "Error while Fetching data");
-        }
-        )
-    
+        .fail(()=>{
+          failpage()
+        })    
   });
   function add_table(url, table, str) {
     $("#modal-body").append(table);
@@ -396,6 +404,9 @@ function number_format(number, decimals, dec_point, thousands_sep) {
                 destroy: true // Allows reinitialization without issues
             });
         }
+    })
+    .fail(()=>{
+      failpage()
     });
 }
 
@@ -410,6 +421,9 @@ function number_format(number, decimals, dec_point, thousands_sep) {
           $.get(encodeURI(`${base_url}/POS?Startdate=${startdate}&enddate=${enddate}`), function (data) {
             
         $pOSText.text(`₹${data[0]["total"]}`);
+      })
+      .fail(()=>{
+        failpage()
       });
   });
 
@@ -587,6 +601,8 @@ $("#stockSelect").change(function (e) {
       error: function(error) {
         console.error("Error fetching stock details:", error);
       }
+    }).fail(()=>{
+      failpage()
     });
   }
   else{
@@ -601,6 +617,9 @@ $("#stockSelect").change(function (e) {
       error: function(error) {
         console.error("Error fetching stock details:", error);
       }
+    })
+    .fail(()=>{
+      failpage()
     });
     
 
@@ -1103,6 +1122,10 @@ displaymsg("danger","You are Not Authorized To view This Page")
     hiddenPreloader();
   }
     
+  })
+  .fail(function (){
+    $(".preloader__logo").remove()
+    $(".loader").removeClass("visually-hidden")
   });
 
 });
