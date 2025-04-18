@@ -320,24 +320,6 @@ a{
   --spin-speed: 1.6s;
 }
 /* loader ends  */
-/* .todo-list-overflow-y{
-  height: 50% !important;
-  max-height: 50% !important;
-} */
-/* .todo-list-overflow-y {
-  height: 50% !important;
-  max-height: 50% !important;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.todo-list-overflow-y .card-body,
-.todo-list-overflow-y .input-group,
-.todo-list-overflow-y .form-control,
-.todo-list-overflow-y .list-group {
-  width: 100%;
-  box-sizing: border-box;
-} */
 /* Outer scroll container */
 .todo-list-overflow-y {
   height: 50% !important;
