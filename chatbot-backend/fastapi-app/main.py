@@ -31,24 +31,7 @@ stored_procedures = {
         "params": []
     }
 }
-# stored_procedures = {
-#     "PRC_P3Dash_GetAllLocations": {
-#         "description": "Returns all the locations where the stock can be present",
-#         "params": []
-#     },
-#     "PRC_P3Dash_low_quantity_stock_top_N": {
-#         "description": "Fetches top N products that have low quantity where N is a number if n is not provided it is 0 retreves stocks that have low quantity",
-#         "params": ["N"]
-#     },
-#     "PRC_P3Dash_getTopNProdsAccexpiry_overall": {
-#         "description": "Retreves top N products According to Expiry",
-#         "params": ["N"]
-#     },
-#     "PRC_P3Dash_getTop10ProdsAccexpiry": {
-#         "description": "Retreves all the products that are expiring",
-#         "params": []
-#     }
-# }
+
 
 
 # Create FAISS index
