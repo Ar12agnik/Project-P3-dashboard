@@ -1,0 +1,9 @@
+[submodule "chatbot"]
+	path = chatbot
+	url = https://github.com/Ar12agnik/chatbot.git
+[submodule "dotnet-app"]
+	path = dotnet-app
+	url = https://github.com/Ar12agnik/dashboard-Dotnet-framework-API.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/Ar12agnik/dashboard-Frontend-part.git
