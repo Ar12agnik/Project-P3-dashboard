@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>P3-Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css"
+    integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
+
+  <!-- Load jQuery first -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+  <!-- Load jQuery UI -->
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+
+
+  <script>
+
+  </script>
+  <script src="js/script.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+
+
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body id="page-top" style="background-color: #F4F7F9;">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            
+
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Sales Forecasting Card -->
+            <div class="col-xl-3 col-md-6 mb-4 Card1 " id="sales_forcasting" hidden>
+              <div class="card bg-success shadow h-100 py-2 round-box " data-toggle="modal"
+                data-target="#exampleModalScrollable">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-light text-uppercase mb-3">
+                        Sales Forecasting</div>
+                      <!-- <label for="sales_month">For Month</label> -->
+                      <input type="month" id="sales_month" class="form-control custom-input" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="For month">
+                      <div class="h2 mb-0 font-weight-bold text-light mt-3 text-center" id="sFText">
+                        <div class="spinner-grow" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-light"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Purchase Order Summary Card -->
+            <div class="col-xl-3 col-md-6 mb-4 Card1" id="pOsummary" hidden>
+              <div class="card bg-success shadow h-100 py-3 round-box" data-toggle="modal"
+                data-target="#exampleModalScrollable">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="font-weight-bold text-white">Purchase Order Summary</div>
+                    <i class="fas fa-dollar-sign fa-2x text-white"></i>
+                  </div>
+
+                  <!-- Date Inputs -->
+                  <div class="d-flex justify-content-between mb-3">
+                    <input type="date" id="POSSD" name="startdate" required class="form-control custom-input"
+                      placeholder="Start Date" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Date">
+                    <input type="date" id="POSED" name="EndDate" required class="form-control custom-input"
+                      placeholder="End Date" data-bs-toggle="tooltip" data-bs-placement="bottom" title="End date">
+                  </div>
+
+                  <!-- Amount Display -->
+                  <div class="h2 mb-0 font-weight-bold text-white text-center" id="pOSText">
+                    <div class="spinner-grow" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <!-- Target vs Achievement Card -->
+            <div class="col-xl-3 col-md-6 mb-4 Card1" id="tva" hidden>
+              <div class="card bg-success shadow h-100 py-2 round-box" data-toggle="modal"
+                data-target="#exampleModalScrollable">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-light text-uppercase mb-1">
+                        Target vs Achievement
+                      </div>
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                          <div class="h2 mb-0 mr-3 font-weight-bold text-light" id="tvaText">
+                            <div class="spinner-grow" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="progress progress-sm mr-2">
+                            <div class="progress-bar " role="progressbar" style="background-color:#F2C94C"
+                              aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" id="tvastyle"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Stock Summary Card -->
+            <div class="col-xl-3 col-md-6 mb-4 Card1" id="stocksummary" hidden>
+              <div class="card bg-success shadow h-100 py-2 round-box" data-toggle="modal"
+                data-target="#exampleModalScrollable">
+                <div class="card-body">
+                  <div class="d-flex flex-nowrap">
+                    <span class="order-1 p-2">
+                      <div class="text-s font-weight-bold text-light text-uppercase mb-1">
+                        Stock Summary
+                      </div>
+                    </span>
+                    <span class="order-2 p-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Filter By">
+                      <!-- <div class="h5" style="align-items:right">Filter By</div> -->
+                      <select id="stockSelect" class="form-control " multiple="multiple" style="width: fit-content;">
+
+                      </select>
+                    </span>
+                  </div>
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="container mt-5 selectpickerc">
+
+                      </div>
+
+                      <div class="h2 mb-0 font-weight-bold text-light text-center" id="stockSummaryText"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-comments fa-2x text-light"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+          <!-- End Content Row -->
+
+          <!-- Content Row -->
+          <div class="row d-flex align-items-stretch mb-4">
+            <!-- Area Chart -->
+            <div class="col-xl-8 col-lg-7 Card1 " id="chart" hidden>
+              <div class="card shadow mb-4 h-100 round-box">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between ">
+                  <h6 class="m-0 font-weight-bold ">Earnings Overview</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+
+                    </a>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <!-- Second Card (Main Container) -->
+            <div class="col-sm-4 d-flex align-items-stretch ">
+              <div class="card h-100 w-100 round-box ">
+                <div class="card-body Card1 overflow-auto bg-success text-white" id="cards" hidden>
+                  <!-- First Scrollable Card -->
+                  <h5 class="card-title font-weight-bold">Top 10 Products </h5>
+
+                  <div class="card-body" id="stk_available" style="width: 100%; height: 350px; overflow-y: auto;">
+
+                  </div>
+
+
+                  <!-- Second Scrollable Card xb-->
+
+
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <!-- *code to be changed starts -->
+          <div class="row">
+
+            <!-- Content Column -->
+            <div class="col-lg-6 mb-4 align-items-stretch">
+
+              <!-- Project Card Example -->
+              <div class="card shadow mb-4 Card1 round-box bg-success text-white" hidden id="low_items">
+
+                <h5 class="card-title font-weight-bold text-light ml-4 mt-4">Low Stock Items</h5>
+
+                <div class="card-body " id="low_stk">
+
+
+                </div>
+              </div>
+
+              <div class="card shadow mb-3 Card1 round-box bg-success text-light" id="Vendor_loc" hidden>
+                <!-- Card Header - Dropdown -->
+
+                <h5 class="m-0 font-weight-bold  text-light ml-4 mt-4 ">Vendor Location</h5>
+
+                <!-- Card Body -->
+                <div class="card-body ">
+                  <select class="form-select" name="chart" id="cht" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Filter by">
+                    <option value="200000001" default>PACKING MATERIAL</option>
+                    <option value="200000002">RAW MATERIAL</option>
+                  </select>
+                  <div class="chart-pie pt-4">
+                    <canvas id="myPieChart"></canvas>
+                  </div>
+                  <hr>
+
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="col-lg-6 mb-4 align-items-stretch">
+
+              <!-- Illustrations -->
+              <div class="card shadow mb-4 Card1 round-box overflow-x bg-success text-light" hidden id="exp_prod">
+
+                <h5 class="card-title font-weight-bold text-light ml-4 mt-4">Expiring products</h5>
+
+                <div class="card-body" id="ct2">
+
+
+
+
+                </div>
+
+
+
+              </div>
+              <div class="card shadow mb-4 Card1 round-box overflow-y bg-success" hidden>
+
+                <h5 class="card-title font-weight-bold text-light ml-4 mt-4">To-Do List(Private)</h5>
+                <div class="card-body" id="todo">
+
+                  <div class="row justify-content-center">
+                    <div class="col-md-8">
+                      <div class="card">
+                        <div class="card-body">
+                          <form id="todo-form">
+                            <div class="input-group mb-3">
+                              <input type="text" class="form-control" id="todo-input" placeholder="Add new task"
+                                required data-bs-toggle="tooltip" data-bs-placement="top" title="Add new Task">
+                              <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Click To add task">
+                                <i class="bi bi-plus"></i>
+                              </button>
+                            </div>
+                          </form>
+                          <ul class="list-group sortable" id="todo-list">
+                            <!-- Tasks will be added here dynamically -->
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+                </div>
+
+
+
+              </div>
+
+            </div>
+
+            <!-- *code to be changed ends -->
+
+            <!-- End Content Row -->
+
+          </div>
+
+        </div>
+        <!-- End Container Fluid -->
+
+      </div>
+      <!-- End Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; your Company </span>
+          </div>
+        </div>
+      </footer>
+      <!-- End Footer -->
+
+    </div>
+    <!-- End Content Wrapper -->
+
+  </div>
+  <!-- End Page Wrapper -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalScrollable" tabindex="-1" aria-labelledby="exampleModalScrollableTitle"
+    aria-modal="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl"> <!-- Added modal-xl for larger size -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalScrollableTitle">Modal title</h1>
+          <button type="button" class="btn close-btn" data-toggle="modal"
+            data-target="#exampleModalScrollable">X</button>
+        </div>
+        <div class="modal-body">
+          <label for="sales_month" id="sales_month_modal_label" hidden>For Month</label>
+          <input type="month" id="sales_month_modal" class="form-control custom-input mb-3" hidden>
+          <div class="two-inputs" id="two_inputs" hidden>
+            <div class="d-flex flex-nowrap">
+              <div class="order-1"><label for="POSSD">Start</label><input type="date" id="POSSD_modal" name="startdate"
+                  required class="form-control custom-input" placeholder="StartDate"></div>
+              <div class="order-2"><label for="POSED">END</label><input type="date" id="POSED_modal" name="EndDate"
+                  required class="form-control custom-input mb-3" placeholder="EndDate"></div>
+            </div>
+
+          </div>
+          <span class="order-2 p-2 " id="select_hidden" hidden>
+            <div class="h5" style="align-items:right">Filter By</div>
+            <select id="stockSelect2" class="form-control" multiple="multiple" style="width: fit-content;">
+
+            </select>
+          </span>
+          <div class="mt-3" id="modal-body">
+
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-toggle="modal"
+            data-target="#exampleModalScrollable">Close</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Collapsible Chat Interface -->
+  <div class="collapse mt-3 chat-interface" id="collapseExample">
+    <div class="card card-body chat-interface-body  round-box shadow-lg">
+      <div class="container">
+        <!-- Chat Output Area -->
+         <h4 id="query_show"></h4>
+        <div id="output" class="chat-container p-3 border rounded bg-light">
+          <div class="bot-message chat-bubble p-2 rounded bg-primary text-white">Hello! How can I help you?</div>
+        </div>
+
+        <!-- Chat Input Section -->
+        <div class="d-flex align-items-center mt-3 inputs mb-3">
+          <input type="text" name="query" id="queary" class="form-control me-2 rounded-pill"
+            placeholder="Type a message...">
+          <button class="btn btn-success rounded-circle" id="btnsubmit">
+            <i class="bi bi-send"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <div class="chatbot bg-primary text-light" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+    aria-expanded="false" aria-controls="collapseExample">
+    <i class="bi bi-robot"></i>
+  </div>
+
+
+  <!-- Button to trigger collapse -->
+
+
+  <!-- Collapsible Content -->
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+  <script src="js/boostrap/choices.min.js"></script>
+
+
+
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"
+    integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+  <!-- Select2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+
+</body>
+
+</html>
