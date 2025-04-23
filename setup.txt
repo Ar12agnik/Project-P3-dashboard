@@ -1,0 +1,33 @@
+open terminal in directory
+'''
+cd chatbot-backend
+
+cd fastapi-app
+
+python -m venv myenv
+
+.\myenv\Scripts\activate
+
+pip install -r requirements.txt
+
+fastapi dev main.py
+
+'''
+running the app for the first time would take a little bit of time
+
+once running verify at 
+
+http://127.0.0.1:8000/docs
+
+if it is Not running 
+check terminal for errors 
+no errors are displayed then just wait a few seconds
+
+once you see the swagger ui 
+run the dotnet and js servers
+note: js server is in liveserver
+
+
+
+for additional help use this 
+https://chatgpt.com/share/680912ba-df68-8006-ae0a-bd8922b7714c
